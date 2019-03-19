@@ -13,11 +13,4 @@ public class HomeController {
 
         return modelAndView;
     }
-
-    @GetMapping("register")
-    public ModelAndView register(ModelAndView modelAndView){
-        modelAndView.setViewName("register");
-
-        return modelAndView;
-    }
 }
