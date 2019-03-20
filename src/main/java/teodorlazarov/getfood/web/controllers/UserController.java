@@ -30,13 +30,6 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/login")
-    public ModelAndView loginConfirm(){
-        //TODO create loginConfirm
-
-        return null;
-    }
-
     @GetMapping("/register")
     public ModelAndView register(ModelAndView modelAndView){
         modelAndView.setViewName("register");
