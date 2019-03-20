@@ -1,13 +1,15 @@
 package teodorlazarov.getfood.domain.entities;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity implements UserDetails {
 
     private String username;
     private String fullName;
@@ -15,7 +17,7 @@ public class User extends BaseEntity{
     private String email;
     private String phoneNumber;
     private LocalDate registeredOn;
-//    private Set<UserRole> roles;
+    private Set<UserRole> roles;
 //    private List<Address> addresses;
 //    private List<Order> orders;
 
@@ -76,7 +78,49 @@ public class User extends BaseEntity{
         this.registeredOn = registeredOn;
     }
 
-//    public List<Address> getAddresses() {
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    public Set<UserRole> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    @Transient
+    public Collection<UserRole> getAuthorities() {
+        return this.roles;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isEnabled() {
+        return true;
+    }
+
+    //    public List<Address> getAddresses() {
 //        return this.addresses;
 //    }
 //
