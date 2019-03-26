@@ -7,10 +7,13 @@ import java.math.BigDecimal;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
+    //TODO constraints and validations
+
     private String name;
     private String description;
     private ProductType productType;
     private BigDecimal price;
+    private double weight;
 
     public Product() {
     }
@@ -33,8 +36,8 @@ public class Product extends BaseEntity {
         this.description = description;
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "product_type", nullable = false)
+    @ManyToOne(targetEntity = ProductType.class)
+    @JoinColumn(name = "product_type_id", referencedColumnName = "id", nullable = false)
     public ProductType getProductType() {
         return this.productType;
     }
@@ -50,5 +53,14 @@ public class Product extends BaseEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    @Column(name = "weight", nullable = false, precision = 2)
+    public double getWeight() {
+        return this.weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 }

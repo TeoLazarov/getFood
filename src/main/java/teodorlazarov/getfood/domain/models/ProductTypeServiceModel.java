@@ -1,23 +1,27 @@
-package teodorlazarov.getfood.domain.entities;
+package teodorlazarov.getfood.domain.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import teodorlazarov.getfood.domain.entities.Product;
+
 import java.util.List;
 
-@Entity
-@Table(name = "product_types")
-public class ProductType extends BaseEntity {
+public class ProductTypeServiceModel {
 
+    private String id;
     private String name;
     private List<Product> products;
     private boolean isHidden;
 
-    public ProductType() {
+    public ProductTypeServiceModel() {
     }
 
-    @Column(name = "name", nullable = false, unique = true)
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -26,7 +30,6 @@ public class ProductType extends BaseEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "productType")
     public List<Product> getProducts() {
         return this.products;
     }
@@ -35,7 +38,6 @@ public class ProductType extends BaseEntity {
         this.products = products;
     }
 
-    @Column(name = "is_hidden", nullable = false)
     public boolean isHidden() {
         return this.isHidden;
     }

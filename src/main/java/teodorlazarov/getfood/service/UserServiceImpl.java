@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         user.setRoles(getRolesForRegistration());
         user.setRegisteredOn(LocalDate.now());
 
-        return this.modelMapper.map(this.userRepository.save(user), UserServiceModel.class);
+        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
 
     @Override
@@ -50,9 +50,12 @@ public class UserServiceImpl implements UserService {
     private Set<UserRole> getRolesForRegistration(){
         Set<UserRole> roles = new HashSet<>();
         if (this.userRepository.findAll().isEmpty()){
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ADMIN"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ROOT"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ADMIN"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_EMPLOYEE"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"),UserRole.class));
         } else {
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("USER"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"),UserRole.class));
         }
 
         return roles;

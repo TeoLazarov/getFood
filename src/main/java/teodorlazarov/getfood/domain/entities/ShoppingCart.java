@@ -8,8 +8,10 @@ import java.util.List;
 @Table(name = "shopping_carts")
 public class ShoppingCart extends BaseEntity {
 
+    //TODO constraints and validations
+
     private User user;
-    private List<OrderItem> items;
+    private List<OrderItem> orderItems;
     private LocalDate expiresOn;
 
     public ShoppingCart() {
@@ -25,13 +27,13 @@ public class ShoppingCart extends BaseEntity {
     }
 
     @ManyToOne(targetEntity = OrderItem.class)
-    @JoinColumn(name = "item", referencedColumnName = "id")
+    @JoinColumn(name = "order_item", referencedColumnName = "id")
     public List<OrderItem> getItems() {
-        return this.items;
+        return this.orderItems;
     }
 
-    public void setItems(List<OrderItem> items) {
-        this.items = items;
+    public void setItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Column(name = "expires_on", nullable = false)

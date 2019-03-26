@@ -2,6 +2,7 @@ package teodorlazarov.getfood.web.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
+    @PreAuthorize("isAnonymous()")
     public ModelAndView login(ModelAndView modelAndView){
         modelAndView.setViewName("login");
 
@@ -31,6 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/register")
+    @PreAuthorize("isAnonymous()")
     public ModelAndView register(ModelAndView modelAndView){
         modelAndView.setViewName("register");
 
@@ -38,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ModelAndView registerConfirm(@ModelAttribute UserRegisterBindingModel model, ModelAndView modelAndView){
+    public ModelAndView registerConfirm(@ModelAttribute(name = "model") UserRegisterBindingModel model, ModelAndView modelAndView){
         //TODO compare password and confirmPassword
         this.userService.register(this.modelMapper.map(model, UserServiceModel.class));
 

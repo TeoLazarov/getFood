@@ -8,6 +8,8 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
+    //TODO constraints and validations
+
     private List<OrderItem> orderItems;
     private User user;
     private String notes;
