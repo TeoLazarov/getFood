@@ -14,26 +14,48 @@
                         <a class="nav-link" th:href="@{#}">Menu</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{#}">Cart</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{#}">Orders</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{#}">Administration</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" th:href="@{#}">About us</a>
                     </li>
-                    <li class="nav-item dropdown mx-4">
-                        <a class="nav-link dropdown-toggle" th:href="@{#}" id="navbarDropdownBlog" data-toggle="dropdown"
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" th:href="@{/register}">Register</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{#}">Cart</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{#}">My Orders</a>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                        <a class="nav-link dropdown-toggle" th:href="@{#}" id="navbarDropdownAdministration"
+                           data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                            tedoo
+                            Administration
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAdministration">
+                            <a class="dropdown-item" th:href="@{#}">Orders</a>
+                            <a class="dropdown-item" th:href="@{#}">Products</a>
+                            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" th:href="@{/users}">Users</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" th:href="@{#}">Create a product</a>
+                            </th:block>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown mx-4" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" th:href="@{#}" id="navbarDropdownBlog"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <span th:text="${#authentication.getPrincipal().getUsername()}"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                             <a class="dropdown-item" th:href="@{#}">Profile</a>
                             <a class="dropdown-item" th:href="@{#}">Edit profile</a>
-                            <a class="dropdown-item bg-danger" th:href="@{#}">Logout</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" th:href="@{/logout}">Logout</a>
                         </div>
                     </li>
                 </ul>

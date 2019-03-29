@@ -1,22 +1,21 @@
-package teodorlazarov.getfood.domain.models;
+package teodorlazarov.getfood.domain.models.view;
 
 import teodorlazarov.getfood.domain.entities.UserRole;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-public class UserServiceModel {
+public class UserViewModel {
 
     private String id;
     private String username;
     private String fullName;
-    private String password;
     private String email;
     private String phoneNumber;
     private LocalDate registeredOn;
-    private Set<UserRole> roles;
+    private Set<String> roles;
 
-    public UserServiceModel() {
+    public UserViewModel() {
     }
 
     public String getId() {
@@ -43,14 +42,6 @@ public class UserServiceModel {
         this.fullName = fullName;
     }
 
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return this.email;
     }
@@ -75,11 +66,11 @@ public class UserServiceModel {
         this.registeredOn = registeredOn;
     }
 
-    public Set<UserRole> getRoles() {
+    public Set<String> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(Set<UserRole> roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 }

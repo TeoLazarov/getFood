@@ -5,11 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
+
+    //TODO constraints and validations
 
     private String username;
     private String fullName;
@@ -18,8 +21,9 @@ public class User extends BaseEntity implements UserDetails {
     private String phoneNumber;
     private LocalDate registeredOn;
     private Set<UserRole> roles;
-//    private List<Address> addresses;
-//    private List<Order> orders;
+    private List<Order> orders;
+    private List<Address> addresses;
+    private ShoppingCart shoppingCart;
 
     public User() {
     }
@@ -120,19 +124,34 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-    //    public List<Address> getAddresses() {
-//        return this.addresses;
-//    }
-//
-//    public void setAddresses(List<Address> addresses) {
-//        this.addresses = addresses;
-//    }
-//
-//    public List<Order> getOrders() {
-//        return this.orders;
-//    }
-//
-//    public void setOrders(List<Order> orders) {
-//        this.orders = orders;
-//    }
+    @OneToMany(mappedBy = "user")
+    public List<Order> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "users_addresses",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id", referencedColumnName = "id"))
+    public List<Address> getAddresses() {
+        return this.addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
+    public ShoppingCart getShoppingCart() {
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 }

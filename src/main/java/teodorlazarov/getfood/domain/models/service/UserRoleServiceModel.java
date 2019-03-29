@@ -1,4 +1,4 @@
-package teodorlazarov.getfood.domain.models;
+package teodorlazarov.getfood.domain.models.service;
 
 public class UserRoleServiceModel {
 
