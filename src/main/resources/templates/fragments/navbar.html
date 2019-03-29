@@ -28,9 +28,6 @@
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" th:href="@{#}">My Orders</a>
                     </li>
-                    <!--<li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">-->
-                    <!--<a class="nav-link" th:href="@{#}">Administration</a>-->
-                    <!--</li>-->
                     <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_EMPLOYEE')">
                         <a class="nav-link dropdown-toggle" th:href="@{#}" id="navbarDropdownAdministration"
                            data-toggle="dropdown"
@@ -39,10 +36,12 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAdministration">
                             <a class="dropdown-item" th:href="@{#}">Orders</a>
+                            <a class="dropdown-item" th:href="@{#}">Products</a>
                             <th:block sec:authorize="hasRole('ROLE_ADMIN')">
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" th:href="@{#}">Products</a>
-                                <a class="dropdown-item" th:href="@{#}">Users</a>
+                                <a class="dropdown-item" th:href="@{/users}">Users</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" th:href="@{#}">Create a product</a>
                             </th:block>
                         </div>
                     </li>

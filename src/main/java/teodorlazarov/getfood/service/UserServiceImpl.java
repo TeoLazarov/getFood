@@ -8,12 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.entities.UserRole;
-import teodorlazarov.getfood.domain.models.UserServiceModel;
+import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -59,5 +61,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return roles;
+    }
+
+    @Override
+    public List<UserServiceModel> findAllUsers(){
+        return this.userRepository
+                .findAll()
+                .stream()
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

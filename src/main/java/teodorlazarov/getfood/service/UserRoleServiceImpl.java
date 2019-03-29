@@ -3,7 +3,7 @@ package teodorlazarov.getfood.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import teodorlazarov.getfood.domain.models.UserRoleServiceModel;
+import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.repository.UserRoleRepository;
 
 @Service
