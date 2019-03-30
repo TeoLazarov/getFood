@@ -11,8 +11,7 @@ import java.util.List;
 public class ProductType extends BaseEntity {
 
     private String name;
-    private List<Product> products;
-    private boolean isHidden;
+//    private List<Product> products;
 
     public ProductType() {
     }
@@ -26,21 +25,12 @@ public class ProductType extends BaseEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "productType")
-    public List<Product> getProducts() {
-        return this.products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    @Column(name = "is_hidden", nullable = false)
-    public boolean isHidden() {
-        return this.isHidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        isHidden = hidden;
-    }
+//    @OneToMany(mappedBy = "productType")
+//    public List<Product> getProducts() {
+//        return this.products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 }

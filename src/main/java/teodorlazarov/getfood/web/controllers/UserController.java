@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import teodorlazarov.getfood.domain.binding.UserRegisterBindingModel;
+import teodorlazarov.getfood.domain.models.binding.UserRegisterBindingModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.domain.models.view.UserViewModel;
 import teodorlazarov.getfood.service.UserService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package teodorlazarov.getfood.domain.binding;
+package teodorlazarov.getfood.domain.models.binding;
 
 public class UserRegisterBindingModel {
 

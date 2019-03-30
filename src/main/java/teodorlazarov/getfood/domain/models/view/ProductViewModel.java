@@ -1,14 +1,12 @@
-package teodorlazarov.getfood.domain.entities;
+package teodorlazarov.getfood.domain.models.view;
 
-import javax.persistence.*;
+import teodorlazarov.getfood.domain.entities.ProductType;
+
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class Product extends BaseEntity {
+public class ProductViewModel {
 
-    //TODO constraints and validations
-
+    private String id;
     private String name;
     private String description;
     private ProductType productType;
@@ -16,10 +14,17 @@ public class Product extends BaseEntity {
     private double weight;
     private boolean isHidden;
 
-    public Product() {
+    public ProductViewModel() {
     }
 
-    @Column(name = "name", nullable = false, unique = true)
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -28,7 +33,6 @@ public class Product extends BaseEntity {
         this.name = name;
     }
 
-    @Column(name = "description", nullable = false)
     public String getDescription() {
         return this.description;
     }
@@ -37,8 +41,6 @@ public class Product extends BaseEntity {
         this.description = description;
     }
 
-    @ManyToOne(targetEntity = ProductType.class)
-    @JoinColumn(name = "product_type_id", referencedColumnName = "id", nullable = false)
     public ProductType getProductType() {
         return this.productType;
     }
@@ -47,7 +49,6 @@ public class Product extends BaseEntity {
         this.productType = productType;
     }
 
-    @Column(name = "price", nullable = false)
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -56,7 +57,6 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
-    @Column(name = "weight", nullable = false, precision = 2)
     public double getWeight() {
         return this.weight;
     }
@@ -65,7 +65,6 @@ public class Product extends BaseEntity {
         this.weight = weight;
     }
 
-    @Column(name = "is_hidden", columnDefinition = "tinyint(1) default 0")
     public boolean isHidden() {
         return this.isHidden;
     }
