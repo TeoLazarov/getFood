@@ -41,4 +41,26 @@ public class ProductServiceImpl implements ProductService {
                 .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ProductServiceModel findProductById(String id) {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
+
+        return this.modelMapper.map(product, ProductServiceModel.class);
+    }
+
+    @Override
+    public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
+
+        product.setProductType(this.modelMapper.map(this.productTypeService.findProductTypeByName(productServiceModel.getProductType().getName()), ProductType.class));
+        product.setName(productServiceModel.getName());
+        product.setDescription(productServiceModel.getDescription());
+        product.setPrice(productServiceModel.getPrice());
+        product.setWeight(productServiceModel.getWeight());
+        product.setHidden(productServiceModel.isHidden());
+        product.setImage(productServiceModel.getImage());
+
+        return this.modelMapper.map(this.productRepository.saveAndFlush(product), ProductServiceModel.class);
+    }
 }

@@ -15,6 +15,7 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     private double weight;
     private boolean isHidden;
+    private String image;
 
     public Product() {
     }
@@ -72,5 +73,14 @@ public class Product extends BaseEntity {
 
     public void setHidden(boolean hidden) {
         isHidden = hidden;
+    }
+
+    @Column(name = "image")
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

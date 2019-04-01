@@ -9,6 +9,7 @@ public class ProductCreateBindingModel {
     private String productType;
     private BigDecimal price;
     private double weight;
+    private String image;
 
     public ProductCreateBindingModel() {
     }
@@ -51,5 +52,13 @@ public class ProductCreateBindingModel {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

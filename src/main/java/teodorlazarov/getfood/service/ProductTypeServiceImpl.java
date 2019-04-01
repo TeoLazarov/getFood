@@ -32,7 +32,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
     }
 
     @Override
-    public List<ProductTypeServiceModel> findAllProducts() {
+    public List<ProductTypeServiceModel> findAllTypes() {
         return this.productTypeRepository
                 .findAll()
                 .stream()

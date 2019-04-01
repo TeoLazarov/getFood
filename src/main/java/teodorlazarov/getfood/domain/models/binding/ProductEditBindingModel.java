@@ -1,29 +1,18 @@
-package teodorlazarov.getfood.domain.models.view;
-
-import teodorlazarov.getfood.domain.entities.ProductType;
+package teodorlazarov.getfood.domain.models.binding;
 
 import java.math.BigDecimal;
 
-public class ProductViewModel {
+public class ProductEditBindingModel {
 
-    private String id;
     private String name;
     private String description;
-    private ProductType productType;
+    private String productType;
     private BigDecimal price;
     private double weight;
     private boolean isHidden;
     private String image;
 
-    public ProductViewModel() {
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public ProductEditBindingModel() {
     }
 
     public String getName() {
@@ -42,11 +31,11 @@ public class ProductViewModel {
         this.description = description;
     }
 
-    public ProductType getProductType() {
+    public String getProductType() {
         return this.productType;
     }
 
-    public void setProductType(ProductType productType) {
+    public void setProductType(String productType) {
         this.productType = productType;
     }
 

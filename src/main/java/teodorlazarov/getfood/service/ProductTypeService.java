@@ -11,5 +11,5 @@ public interface ProductTypeService {
 
     ProductTypeServiceModel findProductTypeById(String id);
 
-    List<ProductTypeServiceModel> findAllProducts();
+    List<ProductTypeServiceModel> findAllTypes();
 }

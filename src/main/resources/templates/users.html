@@ -10,6 +10,7 @@
 </header>
 <main>
     <div class="container">
+        <h1 class="text-center">Users</h1>
         <table id="users-table" class="table table-striped my-4">
             <thead class="thead-dark">
             <tr>
@@ -42,9 +43,9 @@
                             '<td>' + x.phoneNumber + '</td>\n' +
                             '<td>' + x.registeredOn + '</td>\n' +
                             '<td>' +
-                            (!x.roles.includes('ROLE_EMPLOYEE') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-info btn-sm">EMPLOYEE</a> ' : '') +
-                            (!x.roles.includes('ROLE_ADMIN') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-info btn-sm">ADMIN</a> ' : '') +
-                            (!x.roles.includes('ROLE_ROOT') && (x.roles.includes('ROLE_EMPLOYEE') || x.roles.includes('ROLE_ADMIN')) ? '<a th:href="@{#}" class="btn btn-info btn-sm">USER</a> ' : '') +
+                            (!x.roles.includes('ROLE_EMPLOYEE') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-warning btn-sm">EMPLOYEE</a> ' : '') +
+                            (!x.roles.includes('ROLE_ADMIN') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-danger btn-sm">ADMIN</a> ' : '') +
+                            (!x.roles.includes('ROLE_ROOT') && (x.roles.includes('ROLE_EMPLOYEE') || x.roles.includes('ROLE_ADMIN')) ? '<a th:href="@{#}" class="btn btn-success btn-sm">USER</a> ' : '') +
                             '</td>' +
                             '</tr>'
                         )

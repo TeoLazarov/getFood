@@ -11,7 +11,6 @@ import java.util.List;
 public class ProductType extends BaseEntity {
 
     private String name;
-//    private List<Product> products;
 
     public ProductType() {
     }
@@ -24,13 +23,4 @@ public class ProductType extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-//    @OneToMany(mappedBy = "productType")
-//    public List<Product> getProducts() {
-//        return this.products;
-//    }
-//
-//    public void setProducts(List<Product> products) {
-//        this.products = products;
-//    }
 }

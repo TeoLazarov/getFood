@@ -13,6 +13,7 @@ public class ProductServiceModel {
     private BigDecimal price;
     private double weight;
     private boolean isHidden;
+    private String image;
 
     public ProductServiceModel() {
     }
@@ -71,5 +72,13 @@ public class ProductServiceModel {
 
     public void setHidden(boolean hidden) {
         isHidden = hidden;
+    }
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

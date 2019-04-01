@@ -4,12 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import teodorlazarov.getfood.domain.entities.ProductType;
 import teodorlazarov.getfood.domain.models.binding.ProductCreateBindingModel;
+import teodorlazarov.getfood.domain.models.binding.ProductEditBindingModel;
 import teodorlazarov.getfood.domain.models.service.ProductServiceModel;
 import teodorlazarov.getfood.domain.models.service.ProductTypeServiceModel;
 import teodorlazarov.getfood.domain.models.view.ProductTypeViewModel;
@@ -38,7 +37,7 @@ public class ProductController {
     @GetMapping("/products/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView create(@ModelAttribute ProductTypeServiceModel model, ModelAndView modelAndView){
-        modelAndView.addObject("model", this.productTypeService.findAllProducts()
+        modelAndView.addObject("model", this.productTypeService.findAllTypes()
                 .stream()
                 .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList()));
         modelAndView.setViewName("product-create");
@@ -76,5 +75,34 @@ public class ProductController {
                 .stream()
                 .map(p -> this.modelMapper.map(p, ProductViewModel.class))
                 .collect(Collectors.toList());
+    }
+
+    //move the business logic out of here
+    @GetMapping("/products/edit/{id}")
+    public ModelAndView edit(@PathVariable String id, ModelAndView modelAndView){
+        ProductServiceModel productServiceModel = this.productService.findProductById(id);
+        ProductViewModel productViewModel = this.modelMapper.map(productServiceModel, ProductViewModel.class);
+        List<ProductTypeViewModel> types = this.productTypeService.findAllTypes()
+                .stream()
+                .filter(p -> !p.getName().equals(productServiceModel.getProductType().getName()))
+                .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList());
+
+        modelAndView.addObject("product", productViewModel);
+        modelAndView.addObject("types", types);
+        modelAndView.setViewName("product-edit");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/products/edit/{id}")
+    public ModelAndView editConfirm(@PathVariable String id, @ModelAttribute ProductEditBindingModel model, ModelAndView modelAndView){
+        ProductServiceModel productServiceModel = this.modelMapper.map(model, ProductServiceModel.class);
+        ProductTypeServiceModel productType = this.productTypeService.findProductTypeById(model.getProductType());
+        productServiceModel.setProductType(this.modelMapper.map(productType, ProductType.class));
+        this.productService.editProduct(id, productServiceModel);
+
+        modelAndView.setViewName(String.format("redirect:/products/edit/%s", id));
+
+        return modelAndView;
     }
 }
