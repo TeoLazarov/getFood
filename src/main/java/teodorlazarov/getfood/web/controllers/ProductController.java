@@ -17,6 +17,7 @@ import teodorlazarov.getfood.service.ProductService;
 import teodorlazarov.getfood.service.ProductTypeService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -101,8 +102,33 @@ public class ProductController {
         productServiceModel.setProductType(this.modelMapper.map(productType, ProductType.class));
         this.productService.editProduct(id, productServiceModel);
 
-        modelAndView.setViewName(String.format("redirect:/products/edit/%s", id));
+        modelAndView.setViewName("redirect:/products/all");
 
         return modelAndView;
+    }
+
+    @GetMapping("/menu")
+    public ModelAndView menu(ModelAndView modelAndView){
+        modelAndView.setViewName("menu");
+
+        return modelAndView;
+    }
+
+    @GetMapping(value = {"/fetch/menu", "/fetch/menu/{type}"}, produces = "application/json")
+    @ResponseBody
+    public Object fetchMenuItems(@PathVariable Optional<String> type){
+        if (type.isPresent()){
+            return this.productService
+                    .findAllNotHiddenProductsByType(type.get())
+                    .stream()
+                    .map(p -> this.modelMapper.map(p, ProductViewModel.class))
+                    .collect(Collectors.toList());
+        } else {
+            return this.productService
+                    .findAllNotHiddenProducts()
+                    .stream()
+                    .map(p -> this.modelMapper.map(p, ProductViewModel.class))
+                    .collect(Collectors.toList());
+        }
     }
 }

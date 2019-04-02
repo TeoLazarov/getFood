@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.Product;
 import teodorlazarov.getfood.domain.entities.ProductType;
 import teodorlazarov.getfood.domain.models.service.ProductServiceModel;
+import teodorlazarov.getfood.domain.models.service.ProductTypeServiceModel;
 import teodorlazarov.getfood.repository.ProductRepository;
 
 import java.util.List;
@@ -62,5 +63,29 @@ public class ProductServiceImpl implements ProductService {
         product.setImage(productServiceModel.getImage());
 
         return this.modelMapper.map(this.productRepository.saveAndFlush(product), ProductServiceModel.class);
+    }
+
+    @Override
+    public List<ProductServiceModel> findAllNotHiddenProducts() {
+        return this.productRepository
+                .findAllByHiddenIsFalse()
+                .stream()
+                .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductServiceModel> findAllNotHiddenProductsByType(String productType) {
+        List<String> types = this.productTypeService.findAllTypes().stream().map(p -> p.getName().toLowerCase()).collect(Collectors.toList());
+
+        if (!types.contains(productType.toLowerCase())) {
+            throw new IllegalArgumentException("Product type not found!");
+        }
+
+        return this.productRepository
+                .findAllByHiddenIsFalseAndProductType_Name(productType)
+                .stream()
+                .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
+                .collect(Collectors.toList());
     }
 }
