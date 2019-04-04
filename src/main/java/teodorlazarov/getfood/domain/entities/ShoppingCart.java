@@ -3,6 +3,7 @@ package teodorlazarov.getfood.domain.entities;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "shopping_carts")
@@ -10,24 +11,16 @@ public class ShoppingCart extends BaseEntity {
 
     //TODO constraints and validations
 
-    private User user;
     private List<OrderItem> orderItems;
     private LocalDate expiresOn;
 
     public ShoppingCart() {
     }
 
-    @OneToOne(mappedBy = "shoppingCart")
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @ManyToOne(targetEntity = OrderItem.class)
-    @JoinColumn(name = "order_item", referencedColumnName = "id")
+    @ManyToMany(targetEntity = OrderItem.class)
+    @JoinTable(name = "shopping_carts_order_items",
+            joinColumns = @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id"))
     public List<OrderItem> getItems() {
         return this.orderItems;
     }

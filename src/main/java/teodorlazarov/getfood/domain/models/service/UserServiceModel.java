@@ -1,5 +1,6 @@
 package teodorlazarov.getfood.domain.models.service;
 
+import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.entities.UserRole;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class UserServiceModel {
     private String phoneNumber;
     private LocalDate registeredOn;
     private Set<UserRole> roles;
+    private ShoppingCartServiceModel shoppingCart;
 
     public UserServiceModel() {
     }
@@ -81,5 +83,13 @@ public class UserServiceModel {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public ShoppingCartServiceModel getShoppingCart() {
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCartServiceModel shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }

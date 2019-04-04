@@ -14,6 +14,7 @@ public class UserViewModel {
     private String phoneNumber;
     private LocalDate registeredOn;
     private Set<String> roles;
+    private String shoppingCart;
 
     public UserViewModel() {
     }
@@ -72,5 +73,13 @@ public class UserViewModel {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public String getShoppingCart() {
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(String shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }

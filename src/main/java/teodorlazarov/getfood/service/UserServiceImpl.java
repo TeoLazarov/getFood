@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.entities.UserRole;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
@@ -22,13 +23,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleService userRoleService;
+    private final ShoppingCartService shoppingCartService;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleService userRoleService, ShoppingCartService shoppingCartService, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.userRoleService = userRoleService;
+        this.shoppingCartService = shoppingCartService;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -39,6 +42,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setRoles(getRolesForRegistration());
         user.setRegisteredOn(LocalDate.now());
+        user.setShoppingCart(this.modelMapper.map(this.shoppingCartService.createShoppingCart(), ShoppingCart.class));
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
