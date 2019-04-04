@@ -1,26 +1,20 @@
-package teodorlazarov.getfood.domain.entities;
+package teodorlazarov.getfood.domain.models.binding;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class Product extends BaseEntity {
-
-    //TODO constraints and validations
+public class ProductEditBindingModel {
 
     private String name;
     private String description;
-    private ProductType productType;
+    private String productType;
     private BigDecimal price;
     private double weight;
     private boolean isHidden;
     private String image;
 
-    public Product() {
+    public ProductEditBindingModel() {
     }
 
-    @Column(name = "name", nullable = false, unique = true)
     public String getName() {
         return this.name;
     }
@@ -29,7 +23,6 @@ public class Product extends BaseEntity {
         this.name = name;
     }
 
-    @Column(name = "description", nullable = false)
     public String getDescription() {
         return this.description;
     }
@@ -38,17 +31,14 @@ public class Product extends BaseEntity {
         this.description = description;
     }
 
-    @ManyToOne(targetEntity = ProductType.class)
-    @JoinColumn(name = "product_type_id", referencedColumnName = "id", nullable = false)
-    public ProductType getProductType() {
+    public String getProductType() {
         return this.productType;
     }
 
-    public void setProductType(ProductType productType) {
+    public void setProductType(String productType) {
         this.productType = productType;
     }
 
-    @Column(name = "price", nullable = false)
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -57,7 +47,6 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
-    @Column(name = "weight", nullable = false, precision = 2)
     public double getWeight() {
         return this.weight;
     }
@@ -66,7 +55,6 @@ public class Product extends BaseEntity {
         this.weight = weight;
     }
 
-    @Column(name = "is_hidden", columnDefinition = "tinyint(1) default 0")
     public boolean isHidden() {
         return this.isHidden;
     }
@@ -75,7 +63,6 @@ public class Product extends BaseEntity {
         isHidden = hidden;
     }
 
-    @Column(name = "image")
     public String getImage() {
         return this.image;
     }

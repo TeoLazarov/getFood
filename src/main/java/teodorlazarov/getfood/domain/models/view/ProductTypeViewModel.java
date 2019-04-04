@@ -1,11 +1,11 @@
-package teodorlazarov.getfood.domain.models.service;
+package teodorlazarov.getfood.domain.models.view;
 
-public class ProductTypeServiceModel {
+public class ProductTypeViewModel {
 
     private String id;
     private String name;
 
-    public ProductTypeServiceModel() {
+    public ProductTypeViewModel() {
     }
 
     public String getId() {

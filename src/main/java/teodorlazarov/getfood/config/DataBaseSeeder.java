@@ -54,7 +54,6 @@ public class DataBaseSeeder {
             for (String product : products) {
                 ProductType productType = new ProductType();
                 productType.setName(product);
-                productType.setHidden(false);
 
                 this.productTypeRepository.saveAndFlush(productType);
             }
