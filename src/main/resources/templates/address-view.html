@@ -35,8 +35,8 @@
             </div>
             <hr class="hr-2"/>
             <div class="button-holder mt-4 mb-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning text-white mx-2">Save address</button>
-                <a th:href="@{'/addresses/view/{id}(id=${address.id})' + '/delete'}" class="btn btn-info mx-2">Delete</a>
+                <button type="submit" class="btn btn-warning text-white mx-2">Save</button>
+                <a th:href="@{|/addresses/view/${address.id}/delete|}" class="btn btn-danger mx-2">Delete</a>
                 <a th:href="@{/profile}" class="btn btn-info mx-2">Cancel</a>
             </div>
         </form>
