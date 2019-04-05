@@ -1,6 +1,6 @@
-package teodorlazarov.getfood.domain.models.view;
+package teodorlazarov.getfood.domain.models.service;
 
-public class AddressViewModel {
+public class AddressServiceModel {
 
     private String id;
     private String name;
@@ -9,7 +9,7 @@ public class AddressViewModel {
     private String phoneNumber;
     private String notes;
 
-    public AddressViewModel() {
+    public AddressServiceModel() {
     }
 
     public String getId() {
