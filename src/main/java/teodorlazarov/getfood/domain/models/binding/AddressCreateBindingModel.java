@@ -1,23 +1,14 @@
-package teodorlazarov.getfood.domain.models.view;
+package teodorlazarov.getfood.domain.models.binding;
 
-public class AddressViewModel {
+public class AddressCreateBindingModel {
 
-    private String id;
     private String name;
     private String city;
     private String address;
     private String phoneNumber;
     private String notes;
 
-    public AddressViewModel() {
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public AddressCreateBindingModel() {
     }
 
     public String getName() {
