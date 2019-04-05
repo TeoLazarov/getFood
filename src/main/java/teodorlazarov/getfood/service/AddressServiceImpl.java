@@ -51,11 +51,6 @@ public class AddressServiceImpl implements AddressService {
     public AddressServiceModel updateAddress(AddressServiceModel newAddress, String username) {
         User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
         Address oldAddress = this.addressRepository.findById(newAddress.getId()).orElseThrow(()-> new IllegalArgumentException("Address not found!"));
-//        List<String> userAddresses = user.getAddresses().stream().map(a -> a.getId()).collect(Collectors.toList());
-//
-//        if (!userAddresses.contains(newAddress.getId())){
-//            throw new IllegalArgumentException("Address not found in your addresses!");
-//        }
 
         if (!user.getAddresses().contains(oldAddress)){
             throw new IllegalArgumentException("Address not found in your addresses!");
