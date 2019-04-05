@@ -10,39 +10,96 @@
 </header>
 <main>
     <div class="container">
-        <h1 class="text-center" th:text="${user.username}"></h1>
-        <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/profile}">
-            <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" class="form-control" id="fullName" placeholder="Full name..." name="fullName" th:value="${user.fullName}">
+        <div class="row mt-2 mb-4">
+            <div class="col-4">
+                <h1 class="text-center">Profile</h1>
+                <hr class="w-25 hr-2"/>
+                <div class="form-group">
+                    <label class="h5 mb-1" for="username">Username</label>
+                    <input type="text" class="form-control" th:disabled="disabled" id="username" placeholder="Full name..."
+                           name="username" th:value="${user.username}">
+                </div>
+                <div class="form-group">
+                    <label class="h5 mb-1" for="fullName">Full Name</label>
+                    <input type="text" class="form-control" th:disabled="disabled" id="fullName" placeholder="Full name..."
+                           name="fullName" th:value="${user.fullName}">
+                </div>
+                <div class="form-group">
+                    <label class="h5 mb-1" for="email">Email</label>
+                    <input type="email" class="form-control" th:disabled="disabled" id="email" placeholder="Email..." name="email"
+                           th:value="${user.email}">
+                </div>
+                <div class="form-group">
+                    <label class="h5 mb-1" for="phoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" th:disabled="disabled" id="phoneNumber" placeholder="Phone number..."
+                           name="phoneNumber" th:value="${user.phoneNumber}">
+                </div>
+                <hr class="hr-2"/>
+                <div class="button-holder m-4 d-flex justify-content-center">
+                    <a th:href="@{/profile/edit}" class="btn btn-danger ml-2">Edit Profile</a>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Email..." name="email" th:value="${user.email}">
+            <div class="col-4">
+                <h1 class="text-center">Addresses</h1>
+                <hr class="w-25 hr-2"/>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small>3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small>Donec id elit non mi porta.</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone number..." name="phoneNumber"  th:value="${user.phoneNumber}">
+            <div class="col-4">
+                <h1 class="text-center">Recent Orders</h1>
+                <hr class="w-25 hr-2"/>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small>3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small>Donec id elit non mi porta.</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">List group item heading</h5>
+                            <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                    </a>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" class="form-control" id="newPassword" placeholder="New Password..." name="password">
-            </div>
-            <div class="form-group">
-                <label for="confirmNewPassword">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm New Password..." name="confirmPassword">
-            </div>
-            <div class="form-group">
-                <label for="password">Current Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Current password..." name="oldPassword">
-            </div>
-            <hr class="hr-2"/>
-            <div class="button-holder m-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-warning text-white">Save profile</button>
-                <a th:href="@{/}" class="btn btn-danger ml-2">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
 </main>
 <footer class="py-5 bg-dark">

@@ -92,9 +92,11 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView profile(ModelAndView modelAndView, Principal principal) {
+    public ModelAndView profile(ModelAndView modelAndView, Principal principal){
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
         UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
+
+        //TODO add addresses and orders
 
         modelAndView.addObject("user", user);
         modelAndView.setViewName("user-profile");
@@ -102,8 +104,19 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/profile")
-    public ModelAndView profileConfirm(@ModelAttribute UserProfileBindingModel model, ModelAndView modelAndView, Principal principal) {
+    @GetMapping("/profile/edit")
+    public ModelAndView profileEdit(ModelAndView modelAndView, Principal principal) {
+        UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
+        UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
+
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("user-profile-edit");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/profile/edit")
+    public ModelAndView profileEditConfirm(@ModelAttribute UserProfileBindingModel model, ModelAndView modelAndView, Principal principal) {
         model.setUsername(principal.getName());
         modelAndView.setViewName("redirect:/profile");
 
