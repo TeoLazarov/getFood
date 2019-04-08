@@ -1,5 +1,7 @@
 package teodorlazarov.getfood.domain.models.binding;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
 
 public class ProductCreateBindingModel {
@@ -9,7 +11,7 @@ public class ProductCreateBindingModel {
     private String productType;
     private BigDecimal price;
     private double weight;
-    private String image;
+    private MultipartFile image;
 
     public ProductCreateBindingModel() {
     }
@@ -54,11 +56,11 @@ public class ProductCreateBindingModel {
         this.weight = weight;
     }
 
-    public String getImage() {
+    public MultipartFile getImage() {
         return this.image;
     }
 
-    public void setImage(String image) {
+    public void setImage(MultipartFile image) {
         this.image = image;
     }
 }

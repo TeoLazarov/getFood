@@ -16,6 +16,7 @@ import teodorlazarov.getfood.domain.models.view.ProductViewModel;
 import teodorlazarov.getfood.service.ProductService;
 import teodorlazarov.getfood.service.ProductTypeService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,9 +49,9 @@ public class ProductController {
 
     @PostMapping("products/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView createConfirm(@ModelAttribute ProductCreateBindingModel model, ModelAndView modelAndView){
+    public ModelAndView createConfirm(@ModelAttribute ProductCreateBindingModel model, ModelAndView modelAndView) throws IOException {
         ProductServiceModel product = this.modelMapper.map(model, ProductServiceModel.class);
-        if (this.productService.createProduct(product, model.getProductType()) == null){
+        if (this.productService.createProduct(product, model.getProductType(), model.getImage()) == null){
             modelAndView.setViewName("product-create");
 
             return modelAndView;
