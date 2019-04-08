@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.models.binding.UserProfileBindingModel;
 import teodorlazarov.getfood.domain.models.binding.UserRegisterBindingModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
@@ -96,8 +95,6 @@ public class UserController {
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
         UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
 
-        //TODO add addresses and orders
-
         modelAndView.addObject("user", user);
         modelAndView.setViewName("user-profile");
 
@@ -117,6 +114,8 @@ public class UserController {
 
     @PostMapping("/profile/edit")
     public ModelAndView profileEditConfirm(@ModelAttribute UserProfileBindingModel model, ModelAndView modelAndView, Principal principal) {
+        //TODO check for security issues
+
         model.setUsername(principal.getName());
         modelAndView.setViewName("redirect:/profile");
 
