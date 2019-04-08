@@ -35,8 +35,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     public void deleteImage(String imgUrl) throws IOException {
         //TODO fix
         String parsedUrl = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-        HashMap options = new HashMap();
-        options.put("invalidate", true);
-        this.cloudinary.uploader().destroy(parsedUrl, options);
+//        HashMap options = new HashMap();
+//        options.put("invalidate", true);
+        this.cloudinary.uploader().destroy(parsedUrl, Cloudinary.asMap("invalidate", true));
     }
 }
