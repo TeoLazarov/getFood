@@ -75,4 +75,20 @@ public class UserServiceImpl implements UserService {
                 .map(u -> this.modelMapper.map(u, UserServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public UserServiceModel editProfile(UserServiceModel model, String oldPassword) {
+        User user = this.userRepository.findUserByUsername(model.getUsername()).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
+
+        if (!this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect password!");
+        }
+
+        user.setPassword(!"".equals(model.getPassword()) ? this.bCryptPasswordEncoder.encode(model.getPassword()) : user.getPassword());
+        user.setEmail(model.getEmail());
+        user.setFullName(model.getFullName());
+        user.setPhoneNumber(model.getPhoneNumber());
+
+        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class );
+    }
 }

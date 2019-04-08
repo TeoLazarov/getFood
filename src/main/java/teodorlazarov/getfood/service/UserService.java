@@ -10,4 +10,6 @@ public interface UserService extends UserDetailsService {
     UserServiceModel register(UserServiceModel userServiceModel);
 
     List<UserServiceModel> findAllUsers();
+
+    UserServiceModel editProfile(UserServiceModel model, String oldPassword);
 }
