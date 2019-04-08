@@ -97,11 +97,11 @@ public class ProductController {
     }
 
     @PostMapping("/products/edit/{id}")
-    public ModelAndView editConfirm(@PathVariable String id, @ModelAttribute ProductEditBindingModel model, ModelAndView modelAndView){
+    public ModelAndView editConfirm(@PathVariable String id, @ModelAttribute ProductEditBindingModel model, ModelAndView modelAndView) throws IOException {
         ProductServiceModel productServiceModel = this.modelMapper.map(model, ProductServiceModel.class);
         ProductTypeServiceModel productType = this.productTypeService.findProductTypeById(model.getProductType());
         productServiceModel.setProductType(this.modelMapper.map(productType, ProductType.class));
-        this.productService.editProduct(id, productServiceModel);
+        this.productService.editProduct(id, productServiceModel, model.getImage());
 
         modelAndView.setViewName("redirect:/products/all");
 

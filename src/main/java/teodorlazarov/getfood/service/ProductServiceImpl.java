@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel) {
+    public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel, MultipartFile image) throws IOException {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
 
         product.setProductType(this.modelMapper.map(this.productTypeService.findProductTypeByName(productServiceModel.getProductType().getName()), ProductType.class));
@@ -64,7 +64,9 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productServiceModel.getPrice());
         product.setWeight(productServiceModel.getWeight());
         product.setHidden(productServiceModel.isHidden());
-        product.setImage(productServiceModel.getImage());
+
+        this.cloudinaryService.deleteImage(product.getImage());
+        product.setImage(this.cloudinaryService.uploadImage(image));
 
         return this.modelMapper.map(this.productRepository.saveAndFlush(product), ProductServiceModel.class);
     }

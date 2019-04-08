@@ -30,4 +30,13 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                 .upload(file, new HashMap())
                 .get("url").toString();
     }
+
+    @Override
+    public void deleteImage(String imgUrl) throws IOException {
+        //TODO fix
+        String parsedUrl = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
+        HashMap options = new HashMap();
+        options.put("invalidate", true);
+        this.cloudinary.uploader().destroy(parsedUrl, options);
+    }
 }

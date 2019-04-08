@@ -14,7 +14,7 @@ public interface ProductService {
 
     ProductServiceModel findProductById(String id);
 
-    ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel);
+    ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel, MultipartFile image) throws IOException;
 
     List<ProductServiceModel> findAllNotHiddenProducts();
 
