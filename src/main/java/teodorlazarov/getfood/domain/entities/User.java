@@ -3,6 +3,7 @@ package teodorlazarov.getfood.domain.entities;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -145,7 +146,7 @@ public class User extends BaseEntity implements UserDetails {
         this.addresses = addresses;
     }
 
-    @OneToOne
+    @OneToOne(targetEntity = ShoppingCart.class)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
     public ShoppingCart getShoppingCart() {
         return this.shoppingCart;

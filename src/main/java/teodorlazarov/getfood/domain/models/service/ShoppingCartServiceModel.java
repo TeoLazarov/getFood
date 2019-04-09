@@ -1,19 +1,17 @@
 package teodorlazarov.getfood.domain.models.service;
 
-import teodorlazarov.getfood.domain.entities.OrderItem;
-import teodorlazarov.getfood.domain.entities.User;
-
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class ShoppingCartServiceModel {
 
     private String id;
-    private List<OrderItem> orderItems;
+    private List<OrderItemServiceModel> orderItems;
     private LocalDate expiresOn;
 
     public ShoppingCartServiceModel() {
+        this.orderItems = new LinkedList<>();
     }
 
     public String getId() {
@@ -24,11 +22,11 @@ public class ShoppingCartServiceModel {
         this.id = id;
     }
 
-    public List<OrderItem> getOrderItems() {
+    public List<OrderItemServiceModel> getOrderItems() {
         return this.orderItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setOrderItems(List<OrderItemServiceModel> orderItems) {
         this.orderItems = orderItems;
     }
 

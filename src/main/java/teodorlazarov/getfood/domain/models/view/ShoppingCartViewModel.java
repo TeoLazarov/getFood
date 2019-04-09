@@ -1,32 +1,24 @@
 package teodorlazarov.getfood.domain.models.view;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class ShoppingCartViewModel {
 
-    private String id;
-    private List<OrderItemViewModel> products;
+    private List<OrderItemViewModel> orderItems;
     private LocalDate expiresOn;
 
     public ShoppingCartViewModel() {
+        this.orderItems = new LinkedList<>();
     }
 
-    public String getId() {
-        return this.id;
+    public List<OrderItemViewModel> getOrderItems() {
+        return this.orderItems;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<OrderItemViewModel> getProducts() {
-        return this.products;
-    }
-
-    public void setProducts(List<OrderItemViewModel> products) {
-        this.products = products;
+    public void setOrderItems(List<OrderItemViewModel> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public LocalDate getExpiresOn() {

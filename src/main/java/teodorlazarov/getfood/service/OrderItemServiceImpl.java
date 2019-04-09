@@ -8,6 +8,8 @@ import teodorlazarov.getfood.domain.entities.Product;
 import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 import teodorlazarov.getfood.repository.OrderItemRepository;
 
+import java.util.Optional;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
@@ -23,12 +25,12 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemServiceModel createOrderItem(String productId) {
+    public OrderItemServiceModel createOrderItem(String productId, Integer quantity) {
         OrderItem orderItem = new OrderItem();
         Product product = this.modelMapper.map(this.productService.findProductById(productId), Product.class);
 
         orderItem.setProduct(product);
-        orderItem.setQuantity(1);
+        orderItem.setQuantity(quantity);
 
         return this.modelMapper.map(this.orderItemRepository.saveAndFlush(orderItem), OrderItemServiceModel.class);
     }
@@ -38,5 +40,25 @@ public class OrderItemServiceImpl implements OrderItemService {
         OrderItem orderItem = this.orderItemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("OrderItem not found!"));
 
         return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
+    }
+
+    @Override
+    public OrderItemServiceModel findOrderItemByProductId(String productId) {
+        OrderItem orderItem = this.orderItemRepository.findOrderItemByProduct_Id(productId).orElse(null);
+
+        return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
+    }
+
+    @Override
+    public OrderItemServiceModel updateOrderItem(OrderItemServiceModel orderItemServiceModel) {
+        OrderItem orderItem = this.modelMapper.map(orderItemServiceModel, OrderItem.class);
+        orderItem = this.orderItemRepository.saveAndFlush(orderItem);
+
+        return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
+    }
+
+    @Override
+    public void removeOrderItem(OrderItemServiceModel orderItemServiceModel) {
+        this.orderItemRepository.deleteById(orderItemServiceModel.getId());
     }
 }

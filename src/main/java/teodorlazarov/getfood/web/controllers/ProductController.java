@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+@PreAuthorize("isAuthenticated()")
 public class ProductController {
 
     private final ProductService productService;
@@ -63,6 +63,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView all(ModelAndView modelAndView){
         modelAndView.setViewName("product-all");
 
@@ -81,6 +82,7 @@ public class ProductController {
 
     //move the business logic out of here
     @GetMapping("/products/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView edit(@PathVariable String id, ModelAndView modelAndView){
         ProductServiceModel productServiceModel = this.productService.findProductById(id);
         ProductViewModel productViewModel = this.modelMapper.map(productServiceModel, ProductViewModel.class);
@@ -97,10 +99,11 @@ public class ProductController {
     }
 
     @PostMapping("/products/edit/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView editConfirm(@PathVariable String id, @ModelAttribute ProductEditBindingModel model, ModelAndView modelAndView) throws IOException {
         ProductServiceModel productServiceModel = this.modelMapper.map(model, ProductServiceModel.class);
         ProductTypeServiceModel productType = this.productTypeService.findProductTypeById(model.getProductType());
-        productServiceModel.setProductType(this.modelMapper.map(productType, ProductType.class));
+        productServiceModel.setProductType(productType);
         this.productService.editProduct(id, productServiceModel, model.getImage());
 
         modelAndView.setViewName("redirect:/products/all");
@@ -131,5 +134,16 @@ public class ProductController {
                     .map(p -> this.modelMapper.map(p, ProductViewModel.class))
                     .collect(Collectors.toList());
         }
+    }
+
+    @GetMapping("/products/view/{id}")
+    public ModelAndView view(@PathVariable String id, ModelAndView modelAndView){
+        ProductServiceModel productServiceModel = this.productService.findProductById(id);
+        ProductViewModel product = this.modelMapper.map(productServiceModel, ProductViewModel.class);
+
+        modelAndView.addObject("product", product);
+        modelAndView.setViewName("product-view");
+
+        return modelAndView;
     }
 }

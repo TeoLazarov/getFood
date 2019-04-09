@@ -1,6 +1,7 @@
 package teodorlazarov.getfood.domain.entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class Order extends BaseEntity {
     private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
+    private BigDecimal totalPrice;
 
     public Order() {
     }
@@ -65,5 +67,14 @@ public class Order extends BaseEntity {
 
     public void setFinished(boolean finished) {
         isFinished = finished;
+    }
+
+    @Column(name = "total_price", nullable = false)
+    public BigDecimal getTotalPrice() {
+        return this.totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
