@@ -8,4 +8,7 @@ public interface ShoppingCartService {
 
     ShoppingCartServiceModel findShoppingCartById(String id);
 
+    void addToShoppingCart(String productId, Integer quantity, String shoppingCartId);
+
+    void removeOrderItem(String orderItemId, String shoppingCartId);
 }

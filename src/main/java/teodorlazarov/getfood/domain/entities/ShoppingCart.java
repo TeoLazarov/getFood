@@ -1,7 +1,10 @@
 package teodorlazarov.getfood.domain.entities;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -15,9 +18,10 @@ public class ShoppingCart extends BaseEntity {
     private LocalDate expiresOn;
 
     public ShoppingCart() {
+        this.orderItems = new LinkedList<>();
     }
 
-    @ManyToMany(targetEntity = OrderItem.class)
+    @ManyToMany(targetEntity = OrderItem.class, fetch = FetchType.EAGER)
     @JoinTable(name = "shopping_carts_order_items",
             joinColumns = @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id"))

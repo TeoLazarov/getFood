@@ -5,7 +5,7 @@ import teodorlazarov.getfood.domain.entities.Product;
 public class OrderItemServiceModel {
 
     private String id;
-    private Product product;
+    private ProductServiceModel product;
     private int quantity;
 
     public OrderItemServiceModel() {
@@ -19,11 +19,11 @@ public class OrderItemServiceModel {
         this.id = id;
     }
 
-    public Product getProduct() {
+    public ProductServiceModel getProduct() {
         return this.product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductServiceModel product) {
         this.product = product;
     }
 

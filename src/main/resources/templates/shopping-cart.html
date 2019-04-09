@@ -22,13 +22,24 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tbody id="listProducts">
+                <tbody>
+                <th:block th:each="orderItem,iter : ${model}">
+                    <tr>
+                        <th scope="row" th:text="${iter.index+1}"></th>
+                        <td th:text="${orderItem.product.name}"></td>
+                        <td th:text="${orderItem.quantity}"></td>
+                        <td th:text="${orderItem.product.price}"></td>
+                        <td><a th:href="@{/cart/remove/{id}(id=${orderItem.id})}" class="btn btn-danger btn-sm">Remove</a></td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>
         <div class="row justify-content-end">
-            <button class="btn btn-info m-2" id="emptyCart">Empty Cart</button>
-            <button class="btn btn-info m-2" id="order">Order</button>
+            <h4>Total: <span th:text="${total}"></span>lv</h4>
+        </div>
+        <div class="row justify-content-end">
+            <a th:href="@{/cart/order}" class="btn btn-success btn-lg m-2" id="order">Order</a>
         </div>
     </div>
 </main>

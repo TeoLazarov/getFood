@@ -9,7 +9,7 @@ public class ProductServiceModel {
     private String id;
     private String name;
     private String description;
-    private ProductType productType;
+    private ProductTypeServiceModel productType;
     private BigDecimal price;
     private double weight;
     private boolean isHidden;
@@ -42,11 +42,11 @@ public class ProductServiceModel {
         this.description = description;
     }
 
-    public ProductType getProductType() {
+    public ProductTypeServiceModel getProductType() {
         return this.productType;
     }
 
-    public void setProductType(ProductType productType) {
+    public void setProductType(ProductTypeServiceModel productType) {
         this.productType = productType;
     }
 

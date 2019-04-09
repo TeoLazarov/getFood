@@ -31,6 +31,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .passwordParameter("password")
                     .defaultSuccessUrl("/")
                 .and()
+                .exceptionHandling()
+                .accessDeniedPage("/")
+                .and()
                     .logout()
                     .logoutSuccessUrl("/");
     }
