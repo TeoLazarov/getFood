@@ -4,6 +4,7 @@ import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.entities.UserRole;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 public class UserServiceModel {
@@ -17,6 +18,7 @@ public class UserServiceModel {
     private LocalDate registeredOn;
     private Set<UserRole> roles;
     private ShoppingCartServiceModel shoppingCart;
+    private List<AddressServiceModel> addresses;
 
     public UserServiceModel() {
     }
@@ -91,5 +93,13 @@ public class UserServiceModel {
 
     public void setShoppingCart(ShoppingCartServiceModel shoppingCart) {
         this.shoppingCart = shoppingCart;
+    }
+
+    public List<AddressServiceModel> getAddresses() {
+        return this.addresses;
+    }
+
+    public void setAddresses(List<AddressServiceModel> addresses) {
+        this.addresses = addresses;
     }
 }

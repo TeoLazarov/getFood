@@ -14,6 +14,7 @@ public class Order extends BaseEntity {
 
     private List<OrderItem> orderItems;
     private User user;
+    private Address address;
     private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
@@ -42,6 +43,16 @@ public class Order extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @ManyToOne(targetEntity = Address.class)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    public Address getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Column(name = "notes")

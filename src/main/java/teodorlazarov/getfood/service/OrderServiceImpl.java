@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.Order;
 import teodorlazarov.getfood.domain.entities.User;
+import teodorlazarov.getfood.domain.models.service.AddressServiceModel;
 import teodorlazarov.getfood.domain.models.service.OrderServiceModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
@@ -12,6 +13,7 @@ import teodorlazarov.getfood.repository.OrderRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -30,10 +32,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderServiceModel createOrder(String username) {
+    public OrderServiceModel createOrder(String username, String addressId) {
         UserServiceModel user = this.userService.findUserByUsername(username);
         String shoppingCartId = user.getShoppingCart().getId();
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
+        List<AddressServiceModel> addresses = user.getAddresses();
+
+        if (shoppingCartServiceModel.getOrderItems().size() <= 0){
+            throw new IllegalArgumentException("Shopping cart is empty!");
+        }
 
         OrderServiceModel orderServiceModel = new OrderServiceModel();
         orderServiceModel.setOrderItems(shoppingCartServiceModel.getOrderItems());
@@ -41,6 +48,16 @@ public class OrderServiceImpl implements OrderService {
         orderServiceModel.setTimeOfOrder(LocalDateTime.now());
         orderServiceModel.setFinished(false);
         orderServiceModel.setTotalPrice(shoppingCartServiceModel.getOrderItems().stream().map(oi -> oi.getProduct().getPrice().multiply(BigDecimal.valueOf(oi.getQuantity()))).reduce(BigDecimal.ZERO,BigDecimal::add));
+
+        for (AddressServiceModel address : addresses) {
+            if (address.getId().equals(addressId)){
+                orderServiceModel.setAddress(address);
+            }
+        }
+
+        if (orderServiceModel.getAddress() == null){
+            throw new IllegalArgumentException("Address is null!");
+        }
 
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
         order = this.orderRepository.saveAndFlush(order);

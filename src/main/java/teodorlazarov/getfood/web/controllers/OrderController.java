@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import teodorlazarov.getfood.domain.models.binding.OrderCreateBindingModel;
 import teodorlazarov.getfood.service.OrderService;
 
 import java.security.Principal;
@@ -20,9 +23,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/orders/create")
-    public ModelAndView createOrder(ModelAndView modelAndView, Principal principal){
-        this.orderService.createOrder(principal.getName());
+    @PostMapping("/orders/create")
+    public ModelAndView createOrder(@ModelAttribute OrderCreateBindingModel model, ModelAndView modelAndView, Principal principal){
+        this.orderService.createOrder(principal.getName(), model.getAddress());
         modelAndView.setViewName("redirect:/orders");
 
         return modelAndView;

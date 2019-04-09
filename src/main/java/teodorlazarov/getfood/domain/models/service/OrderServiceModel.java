@@ -9,6 +9,7 @@ public class OrderServiceModel {
     private String id;
     private List<OrderItemServiceModel> orderItems;
     private UserServiceModel user;
+    private AddressServiceModel address;
     private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
@@ -39,6 +40,14 @@ public class OrderServiceModel {
 
     public void setUser(UserServiceModel user) {
         this.user = user;
+    }
+
+    public AddressServiceModel getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(AddressServiceModel address) {
+        this.address = address;
     }
 
     public String getNotes() {
