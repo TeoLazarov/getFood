@@ -1,7 +1,5 @@
 package teodorlazarov.getfood.domain.models.service;
 
-import teodorlazarov.getfood.domain.entities.Product;
-
 public class OrderItemServiceModel {
 
     private String id;

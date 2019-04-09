@@ -1,50 +1,46 @@
-package teodorlazarov.getfood.domain.entities;
+package teodorlazarov.getfood.domain.models.service;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Entity
-@Table(name = "orders")
-public class Order extends BaseEntity {
+public class OrderServiceModel {
 
-    //TODO constraints and validations
-
-    private List<OrderItem> orderItems;
-    private User user;
+    private String id;
+    private List<OrderItemServiceModel> orderItems;
+    private UserServiceModel user;
     private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
 
-    public Order() {
+    public OrderServiceModel() {
     }
 
-    @ManyToMany(targetEntity = OrderItem.class)
-    @JoinTable(name = "orders_order_items",
-    joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id"))
-    public List<OrderItem> getOrderItems() {
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<OrderItemServiceModel> getOrderItems() {
         return this.orderItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setOrderItems(List<OrderItemServiceModel> orderItems) {
         this.orderItems = orderItems;
     }
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User getUser() {
+    public UserServiceModel getUser() {
         return this.user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserServiceModel user) {
         this.user = user;
     }
 
-    @Column(name = "notes")
     public String getNotes() {
         return this.notes;
     }
@@ -53,7 +49,6 @@ public class Order extends BaseEntity {
         this.notes = notes;
     }
 
-    @Column(name = "time_of_order", nullable = false)
     public LocalDateTime getTimeOfOrder() {
         return this.timeOfOrder;
     }
@@ -62,7 +57,6 @@ public class Order extends BaseEntity {
         this.timeOfOrder = timeOfOrder;
     }
 
-    @Column(name = "is_finished", nullable = false)
     public boolean isFinished() {
         return this.isFinished;
     }
@@ -71,7 +65,6 @@ public class Order extends BaseEntity {
         isFinished = finished;
     }
 
-    @Column(name = "total_price", nullable = false)
     public BigDecimal getTotalPrice() {
         return this.totalPrice;
     }

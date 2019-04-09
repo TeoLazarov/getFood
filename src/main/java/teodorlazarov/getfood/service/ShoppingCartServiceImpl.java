@@ -84,6 +84,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void removeOrderItem(String orderItemId, String shoppingCartId) {
+        OrderItemServiceModel orderItemServiceModel = this.orderItemService.findOrderItemById(orderItemId);
+        this.removeOrderItemFromCart(orderItemId, shoppingCartId);
+
+        this.orderItemService.removeOrderItem(orderItemServiceModel);
+    }
+
+    @Override
+    public void removeOrderItems(List<OrderItemServiceModel> orderItemServiceModels, String shoppingCartId) {
+        for (OrderItemServiceModel orderItemServiceModel : orderItemServiceModels) {
+            this.removeOrderItemFromCart(orderItemServiceModel.getId(), shoppingCartId);
+        }
+    }
+
+    private void removeOrderItemFromCart(String orderItemId, String shoppingCartId){
         ShoppingCartServiceModel shoppingCartServiceModel = this.findShoppingCartById(shoppingCartId);
         OrderItemServiceModel orderItemServiceModel = this.orderItemService.findOrderItemById(orderItemId);
         List<OrderItemServiceModel> toBeRemoved = new LinkedList<>();
@@ -97,6 +111,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartServiceModel.getOrderItems().removeAll(toBeRemoved);
 
         this.updateShoppingCart(shoppingCartServiceModel);
-        this.orderItemService.removeOrderItem(orderItemServiceModel);
     }
 }
