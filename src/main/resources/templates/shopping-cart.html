@@ -29,7 +29,8 @@
                         <td th:text="${orderItem.product.name}"></td>
                         <td th:text="${orderItem.quantity}"></td>
                         <td th:text="${orderItem.product.price}"></td>
-                        <td><a th:href="@{/cart/remove/{id}(id=${orderItem.id})}" class="btn btn-danger btn-sm">Remove</a></td>
+                        <td><a th:href="@{/cart/remove/{id}(id=${orderItem.id})}"
+                               class="btn btn-danger btn-sm">Remove</a></td>
                     </tr>
                 </th:block>
                 </tbody>
@@ -38,9 +39,20 @@
         <div class="row justify-content-end">
             <h4>Total: <span th:text="${total}"></span>lv</h4>
         </div>
-        <div class="row justify-content-end">
-            <a th:href="@{/cart/order}" class="btn btn-success btn-lg m-2" id="order">Order</a>
-        </div>
+        <form class="row justify-content-end" th:method="post" th:action="@{/orders/create}">
+            <div class="col-4 form-group">
+                <label for="address" class="font-weight-bold">Choose delivery address</label>
+                <select class="form-control" id="address" name="address" required>
+                    <option selected="selected" disabled="disabled">Choose an address...</option>
+                    <th:block th:each="address : ${addresses}">
+                        <option th:value="${address.id}" th:text="${address.name}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div class="button-holder mt-4 mb-4 d-flex justify-content-center">
+                <button type="submit" class="btn btn-success btn-lg m-2" id="order">Order</button>
+            </div>
+        </form>
     </div>
 </main>
 <footer class="py-5 bg-dark">

@@ -1,20 +1,20 @@
-package teodorlazarov.getfood.domain.models.view;
+package teodorlazarov.getfood.domain.models.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderViewModel {
+public class OrderServiceModel {
 
     private String id;
-    private List<OrderItemViewModel> orderItems;
-    private UserViewModel user;
-    private AddressViewModel address;
+    private List<OrderItemServiceModel> orderItems;
+    private UserServiceModel user;
+    private AddressServiceModel address;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
 
-    public OrderViewModel() {
+    public OrderServiceModel() {
     }
 
     public String getId() {
@@ -25,27 +25,27 @@ public class OrderViewModel {
         this.id = id;
     }
 
-    public List<OrderItemViewModel> getOrderItems() {
+    public List<OrderItemServiceModel> getOrderItems() {
         return this.orderItems;
     }
 
-    public void setOrderItems(List<OrderItemViewModel> orderItems) {
+    public void setOrderItems(List<OrderItemServiceModel> orderItems) {
         this.orderItems = orderItems;
     }
 
-    public UserViewModel getUser() {
+    public UserServiceModel getUser() {
         return this.user;
     }
 
-    public void setUser(UserViewModel user) {
+    public void setUser(UserServiceModel user) {
         this.user = user;
     }
 
-    public AddressViewModel getAddress() {
+    public AddressServiceModel getAddress() {
         return this.address;
     }
 
-    public void setAddress(AddressViewModel address) {
+    public void setAddress(AddressServiceModel address) {
         this.address = address;
     }
 

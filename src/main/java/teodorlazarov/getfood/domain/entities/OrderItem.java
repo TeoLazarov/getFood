@@ -3,7 +3,7 @@ package teodorlazarov.getfood.domain.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "orders_items")
+@Table(name = "order_items")
 public class OrderItem extends BaseEntity{
 
     //TODO constraints and validations

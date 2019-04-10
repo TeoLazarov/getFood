@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.binding.ProductAddToCartBindingModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
+import teodorlazarov.getfood.domain.models.view.AddressViewModel;
 import teodorlazarov.getfood.domain.models.view.OrderItemViewModel;
 import teodorlazarov.getfood.domain.models.view.ShoppingCartViewModel;
 import teodorlazarov.getfood.service.ShoppingCartService;
@@ -18,6 +19,7 @@ import teodorlazarov.getfood.service.UserService;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,13 +40,19 @@ public class ShoppingCartController {
     public ModelAndView shoppingCart(ModelAndView modelAndView, Principal principal){
         //TODO make it thinner
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
+
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(user.getShoppingCart().getId());
+
         ShoppingCartViewModel model = this.modelMapper.map(shoppingCartServiceModel, ShoppingCartViewModel.class);
         model.setOrderItems(shoppingCartServiceModel.getOrderItems().stream().map(oi -> this.modelMapper.map(oi, OrderItemViewModel.class)).collect(Collectors.toList()));
+
         BigDecimal total = model.getOrderItems().stream().map(oi -> oi.getProduct().getPrice().multiply(BigDecimal.valueOf(oi.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<AddressViewModel> addresses = user.getAddresses().stream().map(a -> this.modelMapper.map(a, AddressViewModel.class)).collect(Collectors.toList());
 
         modelAndView.addObject("model", model.getOrderItems());
         modelAndView.addObject("total", total);
+        modelAndView.addObject("addresses", addresses);
         modelAndView.setViewName("shopping-cart");
         return modelAndView;
     }

@@ -14,7 +14,7 @@ public class Order extends BaseEntity {
 
     private List<OrderItem> orderItems;
     private User user;
-    private String notes;
+    private Address address;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
@@ -22,8 +22,10 @@ public class Order extends BaseEntity {
     public Order() {
     }
 
-    @ManyToOne(targetEntity = OrderItem.class)
-    @JoinColumn(name = "order_item", referencedColumnName = "id", nullable = false)
+    @ManyToMany(targetEntity = OrderItem.class)
+    @JoinTable(name = "orders_order_items",
+    joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id"))
     public List<OrderItem> getOrderItems() {
         return this.orderItems;
     }
@@ -42,13 +44,14 @@ public class Order extends BaseEntity {
         this.user = user;
     }
 
-    @Column(name = "notes")
-    public String getNotes() {
-        return this.notes;
+    @ManyToOne(targetEntity = Address.class)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    public Address getAddress() {
+        return this.address;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Column(name = "time_of_order", nullable = false)
@@ -77,4 +80,5 @@ public class Order extends BaseEntity {
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 }
