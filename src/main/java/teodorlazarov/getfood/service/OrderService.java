@@ -11,4 +11,6 @@ public interface OrderService {
     List<OrderServiceModel> findRecentOrdersByUsername(String username);
 
     List<OrderServiceModel> findAllOrdersByUsername(String username);
+
+    OrderServiceModel findOrderById(String id);
 }

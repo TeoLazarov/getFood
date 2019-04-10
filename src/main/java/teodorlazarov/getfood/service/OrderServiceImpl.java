@@ -92,4 +92,12 @@ public class OrderServiceImpl implements OrderService {
                 .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrderServiceModel findOrderById(String id) {
+        //TODO check if user is the owner of the order
+        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+
+        return this.modelMapper.map(order, OrderServiceModel.class);
+    }
 }

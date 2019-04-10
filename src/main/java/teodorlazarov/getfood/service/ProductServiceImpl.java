@@ -65,8 +65,10 @@ public class ProductServiceImpl implements ProductService {
         product.setWeight(productServiceModel.getWeight());
         product.setHidden(productServiceModel.isHidden());
 
-        this.cloudinaryService.deleteImage(product.getImage());
-        product.setImage(this.cloudinaryService.uploadImage(image));
+        if (!image.isEmpty()){
+            this.cloudinaryService.deleteImage(product.getImage());
+            product.setImage(this.cloudinaryService.uploadImage(image));
+        }
 
         return this.modelMapper.map(this.productRepository.saveAndFlush(product), ProductServiceModel.class);
     }
