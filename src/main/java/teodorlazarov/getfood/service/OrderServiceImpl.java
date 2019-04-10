@@ -59,12 +59,16 @@ public class OrderServiceImpl implements OrderService {
 
         for (AddressServiceModel address : addresses) {
             if (address.getId().equals(addressId)) {
-                orderServiceModel.setAddress(address);
+                orderServiceModel.setAddressName(address.getName());
+                orderServiceModel.setAddressCity(address.getCity());
+                orderServiceModel.setAddressAddress(address.getAddress());
+                orderServiceModel.setAddressPhoneNumber(address.getPhoneNumber());
+                orderServiceModel.setAddressNotes(address.getNotes());
             }
         }
 
-        if (orderServiceModel.getAddress() == null) {
-            throw new IllegalArgumentException("Address is null!");
+        if (orderServiceModel.getAddressCity().isEmpty() || orderServiceModel.getAddressAddress().isEmpty() ) {
+            throw new IllegalArgumentException("Address is not valid!");
         }
 
         Order order = this.modelMapper.map(orderServiceModel, Order.class);

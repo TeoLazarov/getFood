@@ -14,7 +14,11 @@ public class Order extends BaseEntity {
 
     private List<OrderItem> orderItems;
     private User user;
-    private Address address;
+    private String addressName;
+    private String addressCity;
+    private String addressAddress;
+    private String addressPhoneNumber;
+    private String addressNotes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
@@ -44,14 +48,49 @@ public class Order extends BaseEntity {
         this.user = user;
     }
 
-    @ManyToOne(targetEntity = Address.class)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    public Address getAddress() {
-        return this.address;
+    @Column(name = "address_name")
+    public String getAddressName() {
+        return this.addressName;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
+    }
+
+    @Column(name = "address_city")
+    public String getAddressCity() {
+        return this.addressCity;
+    }
+
+    public void setAddressCity(String addressCity) {
+        this.addressCity = addressCity;
+    }
+
+    @Column(name = "address_address")
+    public String getAddressAddress() {
+        return this.addressAddress;
+    }
+
+    public void setAddressAddress(String addressAddress) {
+        this.addressAddress = addressAddress;
+    }
+
+    @Column(name = "address_phone_number")
+    public String getAddressPhoneNumber() {
+        return this.addressPhoneNumber;
+    }
+
+    public void setAddressPhoneNumber(String addressPhoneNumber) {
+        this.addressPhoneNumber = addressPhoneNumber;
+    }
+
+    @Column(name = "address_notes")
+    public String getAddressNotes() {
+        return this.addressNotes;
+    }
+
+    public void setAddressNotes(String addressNotes) {
+        this.addressNotes = addressNotes;
     }
 
     @Column(name = "time_of_order", nullable = false)

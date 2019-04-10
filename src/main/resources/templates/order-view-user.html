@@ -28,7 +28,13 @@
                     <span class="h5 font-weight-bold">Status: <span class="font-weight-normal" th:text="${order.finished} ? 'Finished' : 'In Progress'"></span></span>
                 </div>
                 <div>
-                    <span class="h5 font-weight-bold">Delivery address: <span class="font-weight-normal" th:text="${order.address.city}+', '+${order.address.address}"></span></span>
+                    <span class="h5 font-weight-bold">Delivery address: <span class="font-weight-normal" th:text="${order.addressCity}+', '+${order.addressAddress}"></span></span>
+                </div>
+                <div>
+                    <span class="h5 font-weight-bold">Phone number: <span class="font-weight-normal" th:text="${order.addressPhoneNumber}"></span></span>
+                </div>
+                <div>
+                    <span class="h5 font-weight-bold">Notes: <span class="font-weight-normal" th:text="${order.addressNotes}"></span></span>
                 </div>
             </div>
             <div class="col-6">
@@ -40,6 +46,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Product</th>
                         <th scope="col">Quantity</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -48,10 +55,12 @@
                             <th scope="row" th:text="${iter.index+1}"></th>
                             <td th:text="${item.product.name}"></td>
                             <td th:text="${item.quantity}"></td>
+                            <td></td>
                         </tr>
                     </th:block>
                     <tr>
                         <th></th>
+                        <td></td>
                         <td></td>
                         <td class="font-weight-bold h5" th:text="'Total: '+${order.totalPrice}+'lv'"></td>
                     </tr>

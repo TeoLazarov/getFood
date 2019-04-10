@@ -27,7 +27,7 @@
                     <tr>
                         <th th:text="${iter.index + 1}"></th>
                         <td th:text="${#temporals.format(order.timeOfOrder, 'dd.MM.YYYY HH:mm')}"></td>
-                        <td th:text="${order.address.name}"></td>
+                        <td th:text="${order.addressName}"></td>
                         <td th:text="${order.totalPrice}+'lv'"></td>
                         <td><a class="btn btn-info btn-sm" th:href="@{/orders/view/{id}(id=${order.id})}">View</a></td>
                     </tr>
