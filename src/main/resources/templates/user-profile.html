@@ -60,33 +60,20 @@
                 <h1 class="text-center">Recent Orders</h1>
                 <hr class="w-25 hr-2"/>
                 <div class="button-holder m-2 d-flex justify-content-center">
-                    <a th:href="@{/profile/edit}" class="btn btn-info ml-2">View All</a>
+                    <a th:href="@{/orders}" class="btn btn-info ml-2">View All</a>
                 </div>
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small>3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small>Donec id elit non mi porta.</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">List group item heading</h5>
-                            <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                    </a>
+                    <th:block th:each="order : ${orders}">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${#temporals.format(order.timeOfOrder, 'dd.MM.YYYY HH:mm')}"></h5>
+                                <small th:text="${order.totalPrice} + 'lv'"></small>
+                            </div>
+                            <th:block th:each="item : ${order.getOrderItems()}">
+                                <p class="mb-1" th:text="${item.product.name} + ' x' + ${item.quantity}"></p>
+                            </th:block>
+                        </a>
+                    </th:block>
                 </div>
             </div>
         </div>

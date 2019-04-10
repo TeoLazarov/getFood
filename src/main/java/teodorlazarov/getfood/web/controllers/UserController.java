@@ -13,12 +13,15 @@ import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.binding.UserProfileBindingModel;
 import teodorlazarov.getfood.domain.models.binding.UserRegisterBindingModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
+import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.domain.models.view.UserProfileViewModel;
 import teodorlazarov.getfood.domain.models.view.UserViewModel;
+import teodorlazarov.getfood.service.OrderService;
 import teodorlazarov.getfood.service.UserService;
 
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,11 +29,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final OrderService orderService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, OrderService orderService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.orderService = orderService;
         this.modelMapper = modelMapper;
     }
 
@@ -94,8 +99,10 @@ public class UserController {
     public ModelAndView profile(ModelAndView modelAndView, Principal principal){
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
         UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
+        List<OrderViewModel> recentOrders =  this.orderService.findRecentOrdersByUsername(principal.getName()).stream().map(o -> this.modelMapper.map(o, OrderViewModel.class)).collect(Collectors.toList());
 
         modelAndView.addObject("user", user);
+        modelAndView.addObject("orders", recentOrders);
         modelAndView.setViewName("user-profile");
 
         return modelAndView;

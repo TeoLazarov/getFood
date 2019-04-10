@@ -10,7 +10,6 @@ public class OrderServiceModel {
     private List<OrderItemServiceModel> orderItems;
     private UserServiceModel user;
     private AddressServiceModel address;
-    private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
@@ -48,14 +47,6 @@ public class OrderServiceModel {
 
     public void setAddress(AddressServiceModel address) {
         this.address = address;
-    }
-
-    public String getNotes() {
-        return this.notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public LocalDateTime getTimeOfOrder() {

@@ -15,7 +15,6 @@ public class Order extends BaseEntity {
     private List<OrderItem> orderItems;
     private User user;
     private Address address;
-    private String notes;
     private LocalDateTime timeOfOrder;
     private boolean isFinished;
     private BigDecimal totalPrice;
@@ -55,15 +54,6 @@ public class Order extends BaseEntity {
         this.address = address;
     }
 
-    @Column(name = "notes")
-    public String getNotes() {
-        return this.notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     @Column(name = "time_of_order", nullable = false)
     public LocalDateTime getTimeOfOrder() {
         return this.timeOfOrder;
@@ -90,4 +80,5 @@ public class Order extends BaseEntity {
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 }

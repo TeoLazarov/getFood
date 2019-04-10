@@ -14,6 +14,7 @@ import teodorlazarov.getfood.repository.OrderRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -38,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
         List<AddressServiceModel> addresses = user.getAddresses();
 
-        if (shoppingCartServiceModel.getOrderItems().size() <= 0){
+        if (shoppingCartServiceModel.getOrderItems().size() <= 0) {
             throw new IllegalArgumentException("Shopping cart is empty!");
         }
 
@@ -47,15 +48,22 @@ public class OrderServiceImpl implements OrderService {
         orderServiceModel.setUser(user);
         orderServiceModel.setTimeOfOrder(LocalDateTime.now());
         orderServiceModel.setFinished(false);
-        orderServiceModel.setTotalPrice(shoppingCartServiceModel.getOrderItems().stream().map(oi -> oi.getProduct().getPrice().multiply(BigDecimal.valueOf(oi.getQuantity()))).reduce(BigDecimal.ZERO,BigDecimal::add));
+        orderServiceModel
+                .setTotalPrice(shoppingCartServiceModel
+                        .getOrderItems()
+                        .stream()
+                        .map(oi -> oi.getProduct()
+                                .getPrice()
+                                .multiply(BigDecimal.valueOf(oi.getQuantity())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         for (AddressServiceModel address : addresses) {
-            if (address.getId().equals(addressId)){
+            if (address.getId().equals(addressId)) {
                 orderServiceModel.setAddress(address);
             }
         }
 
-        if (orderServiceModel.getAddress() == null){
+        if (orderServiceModel.getAddress() == null) {
             throw new IllegalArgumentException("Address is null!");
         }
 
@@ -65,5 +73,23 @@ public class OrderServiceImpl implements OrderService {
         this.shoppingCartService.removeOrderItems(shoppingCartServiceModel.getOrderItems(), shoppingCartServiceModel.getId());
 
         return this.modelMapper.map(order, OrderServiceModel.class);
+    }
+
+    @Override
+    public List<OrderServiceModel> findRecentOrdersByUsername(String username) {
+        return this.orderRepository
+                .findFirst3ByUser_UsernameOrderByTimeOfOrderDesc(username)
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderServiceModel> findAllOrdersByUsername(String username) {
+        return this.orderRepository
+                .findAllByUser_UsernameOrderByTimeOfOrderDesc(username)
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
     }
 }
