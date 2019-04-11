@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.entities.UserRole;
+import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,22 +55,22 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found."));
     }
 
-    private Set<UserRole> getRolesForRegistration(){
+    private Set<UserRole> getRolesForRegistration() {
         Set<UserRole> roles = new HashSet<>();
-        if (this.userRepository.findAll().isEmpty()){
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ROOT"),UserRole.class));
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ADMIN"),UserRole.class));
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_EMPLOYEE"),UserRole.class));
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"),UserRole.class));
+        if (this.userRepository.findAll().isEmpty()) {
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ROOT"), UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_ADMIN"), UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_EMPLOYEE"), UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"), UserRole.class));
         } else {
-            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"),UserRole.class));
+            roles.add(this.modelMapper.map(this.userRoleService.getRoleByRoleName("ROLE_USER"), UserRole.class));
         }
 
         return roles;
     }
 
     @Override
-    public List<UserServiceModel> findAllUsers(){
+    public List<UserServiceModel> findAllUsers() {
         return this.userRepository
                 .findAll()
                 .stream()
@@ -89,11 +91,66 @@ public class UserServiceImpl implements UserService {
         user.setFullName(model.getFullName());
         user.setPhoneNumber(model.getPhoneNumber());
 
-        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class );
+        return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }
 
     @Override
     public UserServiceModel findUserByUsername(String username) {
         return this.modelMapper.map(this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!")), UserServiceModel.class);
+    }
+
+    @Override
+    public void changeUserRole(String username, String roleName) {
+        if ("ROLE_ROOT".equals(roleName)){
+            throw new IllegalArgumentException("Role cannot be modified");
+        }
+
+        UserServiceModel user = this.findUserByUsername(username);
+        UserRoleServiceModel role = this.userRoleService.getRoleByRoleName(roleName);
+        boolean userHasRole = false;
+        boolean userHasEmployeeRole = false;
+        List<UserRoleServiceModel> rolesToBeRemoved = new LinkedList<>();
+
+        if ("ROLE_USER".equals(role.getRole())) {
+            for (UserRoleServiceModel userRole : user.getRoles()) {
+                if (!"ROLE_USER".equals(userRole.getRole())) {
+                    rolesToBeRemoved.add(userRole);
+                }
+            }
+
+            user.getRoles().removeAll(rolesToBeRemoved);
+        } else {
+            for (UserRoleServiceModel userRole : user.getRoles()) {
+                if (userRole.getRole().equals(role.getRole())) {
+                    userHasRole = true;
+                }
+            }
+
+            if (userHasRole) {
+                for (UserRoleServiceModel userRole : user.getRoles()) {
+                    if (userRole.getRole().equals(role.getRole())) {
+                        user.getRoles().remove(userRole);
+                    }
+                }
+            } else if ("ROLE_ADMIN".equals(role.getRole())) {
+                for (UserRoleServiceModel userRole : user.getRoles()) {
+                    if ("ROLE_EMPLOYEE".equals(userRole.getRole())) {
+                        userHasEmployeeRole = true;
+                    }
+                }
+
+                if (!userHasEmployeeRole) {
+                    UserRoleServiceModel employee = this.userRoleService.getRoleByRoleName("ROLE_EMPLOYEE");
+
+                    user.getRoles().add(employee);
+                }
+
+                user.getRoles().add(role);
+            } else {
+                user.getRoles().add(role);
+            }
+        }
+
+        this.userRepository.save(this.modelMapper.map(user, User.class));
     }
 }

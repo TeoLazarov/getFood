@@ -43,9 +43,9 @@
                             '<td>' + x.phoneNumber + '</td>\n' +
                             '<td>' + x.registeredOn + '</td>\n' +
                             '<td>' +
-                            (!x.roles.includes('ROLE_EMPLOYEE') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-warning btn-sm">EMPLOYEE</a> ' : '') +
-                            (!x.roles.includes('ROLE_ADMIN') && !x.roles.includes('ROLE_ROOT') ? '<a th:href="@{#}" class="btn btn-danger btn-sm">ADMIN</a> ' : '') +
-                            (!x.roles.includes('ROLE_ROOT') && (x.roles.includes('ROLE_EMPLOYEE') || x.roles.includes('ROLE_ADMIN')) ? '<a th:href="@{#}" class="btn btn-success btn-sm">USER</a> ' : '') +
+                            (!x.roles.includes('ROLE_EMPLOYEE') && !x.roles.includes('ROLE_ROOT') ? '<a href="/admin/user/' + x.username + '/change-role/' + 'ROLE_EMPLOYEE' + '" class="btn btn-warning btn-sm">EMPLOYEE</a> ' : '') +
+                            (!x.roles.includes('ROLE_ADMIN') && !x.roles.includes('ROLE_ROOT') ? '<a href="/admin/user/' + x.username + '/change-role/' + 'ROLE_ADMIN' + '" class="btn btn-danger btn-sm">ADMIN</a> ' : '') +
+                            (!x.roles.includes('ROLE_ROOT') && (x.roles.includes('ROLE_EMPLOYEE') || x.roles.includes('ROLE_ADMIN')) ? '<a href="/admin/user/' + x.username + '/change-role/' + 'ROLE_USER' + '" class="btn btn-success btn-sm">USER</a> ' : '') +
                             '</td>' +
                             '</tr>'
                         )

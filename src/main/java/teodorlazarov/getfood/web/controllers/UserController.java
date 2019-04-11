@@ -66,6 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView users(ModelAndView modelAndView) {
         modelAndView.setViewName("users");
 
@@ -142,6 +143,16 @@ public class UserController {
 
         modelAndView.addObject("user", user);
         modelAndView.setViewName("user-view-admin");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/admin/user/{username}/change-role/{role}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView userChangeRole(@PathVariable String username, @PathVariable String role, ModelAndView modelAndView){
+        this.userService.changeUserRole(username, role);
+
+        modelAndView.setViewName("redirect:/users");
 
         return modelAndView;
     }

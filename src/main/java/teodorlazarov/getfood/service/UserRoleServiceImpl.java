@@ -3,6 +3,7 @@ package teodorlazarov.getfood.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import teodorlazarov.getfood.domain.entities.UserRole;
 import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.repository.UserRoleRepository;
 
@@ -20,6 +21,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRoleServiceModel getRoleByRoleName(String roleName) {
-        return this.modelMapper.map(this.userRoleRepository.findByRole(roleName), UserRoleServiceModel.class);
+        UserRole role = this.userRoleRepository.findByRole(roleName).orElseThrow(() -> new IllegalArgumentException("UserRole not found!"));
+
+        return this.modelMapper.map(role, UserRoleServiceModel.class);
     }
 }

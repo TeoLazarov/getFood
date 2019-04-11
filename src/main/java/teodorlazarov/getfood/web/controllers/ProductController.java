@@ -63,7 +63,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ModelAndView all(ModelAndView modelAndView){
         modelAndView.setViewName("product-all");
 
