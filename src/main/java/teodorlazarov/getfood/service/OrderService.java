@@ -2,7 +2,6 @@ package teodorlazarov.getfood.service;
 
 import teodorlazarov.getfood.domain.models.service.OrderServiceModel;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface OrderService {
@@ -18,4 +17,6 @@ public interface OrderService {
     List<OrderServiceModel> findTodaysOrders();
 
     List<OrderServiceModel> findAllOrders();
+
+    void orderFinish(String orderId);
 }

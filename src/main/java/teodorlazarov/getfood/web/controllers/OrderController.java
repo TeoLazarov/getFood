@@ -3,7 +3,6 @@ package teodorlazarov.getfood.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,7 +14,6 @@ import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.service.OrderService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +49,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/view/{id}")
-    public ModelAndView viewOrder(@PathVariable String id, ModelAndView modelAndView, Authentication authentication) {
+    public ModelAndView viewOrder(@PathVariable String id, ModelAndView modelAndView) {
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
 
         modelAndView.addObject("order", order);
@@ -60,7 +58,7 @@ public class OrderController {
         return modelAndView;
     }
 
-    @GetMapping("/orders/today")
+    @GetMapping("/admin/orders/today")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ModelAndView ordersToday(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
@@ -75,7 +73,7 @@ public class OrderController {
         return modelAndView;
     }
 
-    @GetMapping("/orders/all")
+    @GetMapping("/admin/orders/all")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ModelAndView ordersAll(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
@@ -86,6 +84,25 @@ public class OrderController {
 
         modelAndView.addObject("orders", orders);
         modelAndView.setViewName("order-admin");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/admin/orders/view/{id}")
+    public ModelAndView orderView(@PathVariable String id, ModelAndView modelAndView){
+        OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
+
+        modelAndView.addObject("order", order);
+        modelAndView.setViewName("order-view-admin");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/admin/orders/finish/{id}")
+    public ModelAndView orderFinish(@PathVariable String id, ModelAndView modelAndView){
+        this.orderService.orderFinish(id);
+
+        modelAndView.setViewName("redirect:/admin/orders/today");
 
         return modelAndView;
     }

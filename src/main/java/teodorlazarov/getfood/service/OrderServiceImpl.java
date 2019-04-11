@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderServiceModel findOrderById(String id) {
-        //TODO check if user is the owner of the order
+        //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
         Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found!"));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
@@ -125,5 +125,14 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void orderFinish(String orderId) {
+        OrderServiceModel orderServiceModel = this.findOrderById(orderId);
+        orderServiceModel.setFinished(true);
+        Order order = this.modelMapper.map(orderServiceModel, Order.class);
+
+        this.orderRepository.save(order);
     }
 }
