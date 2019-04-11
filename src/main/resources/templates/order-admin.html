@@ -10,26 +10,32 @@
 </header>
 <main>
     <div class="container">
-        <h1 class="text-center">My Orders</h1>
+        <h1 class="text-center">Orders</h1>
+        <div class="row justify-content-center">
+            <a class="btn btn-info" style="margin-right: 1%" th:href="@{/admin/orders/today}">Today</a>
+            <a class="btn btn-info" th:href="@{/admin/orders/all}">All</a>
+        </div>
         <div class="row text-center">
             <table class="table table-striped my-4">
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Total price</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Details</th>
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="order, iter : ${orders}">
+                <th:block th:each="order,iter : ${orders}">
                     <tr>
-                        <th th:text="${iter.index + 1}"></th>
+                        <th scope="row" th:text="${iter.index+1}"></th>
                         <td th:text="${#temporals.format(order.timeOfOrder, 'dd.MM.YYYY HH:mm')}"></td>
-                        <td th:text="${order.addressName}"></td>
+                        <td><a th:href="@{/admin/user/{username}(username=${order.user.username})}" th:text="${order.user.username}"></a></td>
                         <td th:text="${order.totalPrice}+'lv'"></td>
-                        <td><a class="btn btn-info btn-sm" th:href="@{/orders/view/{id}(id=${order.id})}">View</a></td>
+                        <td th:text="${order.finished} ? 'Finished' : 'In Progress'"></td>
+                        <td><a th:href="@{/admin/orders/view/{id}(id=${order.id})}" class="btn btn-info btn-sm">View</a></td>
                     </tr>
                 </th:block>
                 </tbody>

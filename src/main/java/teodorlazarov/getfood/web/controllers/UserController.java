@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.binding.UserProfileBindingModel;
 import teodorlazarov.getfood.domain.models.binding.UserRegisterBindingModel;
@@ -135,5 +132,17 @@ public class UserController {
 
             return modelAndView;
         }
+    }
+
+    @GetMapping("/admin/user/{username}")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ModelAndView profileViewAdmin(@PathVariable String username, ModelAndView modelAndView){
+        UserServiceModel userServiceModel = this.userService.findUserByUsername(username);
+        UserProfileViewModel user = this.modelMapper.map(userServiceModel, UserProfileViewModel.class);
+
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("user-view-admin");
+
+        return modelAndView;
     }
 }

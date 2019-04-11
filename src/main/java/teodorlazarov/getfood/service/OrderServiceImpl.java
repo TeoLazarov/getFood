@@ -2,6 +2,7 @@ package teodorlazarov.getfood.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.Order;
 import teodorlazarov.getfood.domain.entities.User;
@@ -12,6 +13,7 @@ import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.OrderRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +69,8 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        if (orderServiceModel.getAddressCity().isEmpty() || orderServiceModel.getAddressAddress().isEmpty() ) {
+        //todo check if empty also
+        if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
             throw new IllegalArgumentException("Address is not valid!");
         }
 
@@ -99,9 +102,37 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderServiceModel findOrderById(String id) {
-        //TODO check if user is the owner of the order
+        //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
         Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found!"));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
+    }
+
+    @Override
+    public List<OrderServiceModel> findTodaysOrders() {
+        List<Order> orders = this.orderRepository.findTodayOrders(LocalDate.now());
+
+        return orders
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderServiceModel> findAllOrders() {
+        return this.orderRepository
+                .findAllByOrderByTimeOfOrderDesc()
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void orderFinish(String orderId) {
+        OrderServiceModel orderServiceModel = this.findOrderById(orderId);
+        orderServiceModel.setFinished(true);
+        Order order = this.modelMapper.map(orderServiceModel, Order.class);
+
+        this.orderRepository.save(order);
     }
 }

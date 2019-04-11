@@ -13,4 +13,10 @@ public interface OrderService {
     List<OrderServiceModel> findAllOrdersByUsername(String username);
 
     OrderServiceModel findOrderById(String id);
+
+    List<OrderServiceModel> findTodaysOrders();
+
+    List<OrderServiceModel> findAllOrders();
+
+    void orderFinish(String orderId);
 }

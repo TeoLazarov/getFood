@@ -10,13 +10,14 @@
 </header>
 <main>
     <div class="container">
+        <div class="mt-2 mb-4">
+            <h1 class="text-center" th:text="'User Profile: '+${user.username}"></h1>
+            <hr class="w-auto hr-2"/>
+        </div>
         <div class="row mt-2 mb-4">
-            <div class="col-4">
+            <div class="col-6">
                 <h1 class="text-center">Profile</h1>
                 <hr class="w-25 hr-2"/>
-                <div class="button-holder m-2 d-flex justify-content-center">
-                    <a th:href="@{/profile/edit}" class="btn btn-info ml-2">Edit Profile</a>
-                </div>
                 <div class="form-group">
                     <label class="h5 mb-1" for="username">Username</label>
                     <input type="text" class="form-control" th:disabled="disabled" id="username" placeholder="Full name..."
@@ -38,42 +39,19 @@
                            name="phoneNumber" th:value="${user.phoneNumber}">
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-6">
                 <h1 class="text-center">Addresses</h1>
                 <hr class="w-25 hr-2"/>
-                <div class="button-holder m-2 d-flex justify-content-center">
-                    <a th:href="@{/addresses/add}" class="btn btn-info ml-2">Add Address</a>
-                </div>
                 <div class="list-group">
                     <th:block th:each="address : ${user.getAddresses()}">
-                        <a th:href="@{|/addresses/view/${address.id}|}" class="list-group-item list-group-item-action">
+                        <div class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1" th:text="${address.name}"></h5>
                             </div>
                             <p class="mb-1" th:text="'Address: ' +${address.city} + ', ' + ${address.address}"></p>
                             <p class="mb-1" th:text="'Phone number: ' +${address.phoneNumber}"></p>
                             <p class="mb-1" th:text="'Notes: ' +${address.notes}"></p>
-                        </a>
-                    </th:block>
-                </div>
-            </div>
-            <div class="col-4">
-                <h1 class="text-center">Recent Orders</h1>
-                <hr class="w-25 hr-2"/>
-                <div class="button-holder m-2 d-flex justify-content-center">
-                    <a th:href="@{/orders}" class="btn btn-info ml-2">View All</a>
-                </div>
-                <div class="list-group">
-                    <th:block th:each="order : ${orders}">
-                        <a th:href="@{/orders/view/{id}(id=${order.id})}" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1" th:text="${#temporals.format(order.timeOfOrder, 'dd.MM.YYYY HH:mm')}"></h5>
-                                <small th:text="${order.totalPrice} + 'lv'"></small>
-                            </div>
-                            <th:block th:each="item : ${order.getOrderItems()}">
-                                <p class="mb-1" th:text="${item.product.name} + ' x' + ${item.quantity}"></p>
-                            </th:block>
-                        </a>
+                        </div>
                     </th:block>
                 </div>
             </div>
