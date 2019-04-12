@@ -19,4 +19,7 @@ public interface OrderService {
     List<OrderServiceModel> findAllOrders();
 
     void orderFinish(String orderId);
+
+    List<OrderServiceModel> findAllNotFinishedOrderByUsername(String username);
+
 }

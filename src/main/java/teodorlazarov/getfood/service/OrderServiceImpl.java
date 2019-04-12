@@ -21,6 +21,11 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private static final String SHOPPING_CART_IS_EMPTY_EXCEPTION = "Shopping cart is empty!";
+    private static final String USER_HAS_ACTIVE_ORDER_EXCEPTION = "User has an active order already.";
+    private static final String ADDRESS_NOT_VALID_EXCEPTION = "Address is not valid!";
+    private static final String ORDER_NOT_FOUND_EXCEPTION = "Order not found!";
+
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
@@ -42,7 +47,9 @@ public class OrderServiceImpl implements OrderService {
         List<AddressServiceModel> addresses = user.getAddresses();
 
         if (shoppingCartServiceModel.getOrderItems().size() <= 0) {
-            throw new IllegalArgumentException("Shopping cart is empty!");
+            throw new IllegalArgumentException(SHOPPING_CART_IS_EMPTY_EXCEPTION);
+        } else if (this.userHasUnfinishedOrder(username)){
+            throw new IllegalArgumentException(USER_HAS_ACTIVE_ORDER_EXCEPTION);
         }
 
         OrderServiceModel orderServiceModel = new OrderServiceModel();
@@ -71,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
         //todo check if empty also
         if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
-            throw new IllegalArgumentException("Address is not valid!");
+            throw new IllegalArgumentException(ADDRESS_NOT_VALID_EXCEPTION);
         }
 
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
@@ -103,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderServiceModel findOrderById(String id) {
         //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
-        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ORDER_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
     }
@@ -134,5 +141,17 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
 
         this.orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderServiceModel> findAllNotFinishedOrderByUsername(String username) {
+        List<Order> orders = this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username);
+
+        return orders.stream().map(o -> this.modelMapper.map(o, OrderServiceModel.class)).collect(Collectors.toList());
+    }
+
+    private boolean userHasUnfinishedOrder(String username){
+        return this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username).size() > 0;
+
     }
 }

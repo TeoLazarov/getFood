@@ -19,4 +19,6 @@ public interface ProductService {
     List<ProductServiceModel> findAllNotHiddenProducts();
 
     List<ProductServiceModel> findAllNotHiddenProductsByType(String productType);
+
+    List<ProductServiceModel> findIndexPageProducts();
 }

@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @Controller
 public class UserController {
 
+    private static final String PASSWORDS_DONT_MATCH_EXCEPTION = "Passwords don't match!";
+
     private final UserService userService;
     private final OrderService orderService;
     private final ModelMapper modelMapper;
@@ -55,7 +57,7 @@ public class UserController {
     @PostMapping("/register")
     public ModelAndView registerConfirm(@ModelAttribute(name = "model") UserRegisterBindingModel model, ModelAndView modelAndView) {
         if (!model.getPassword().equals(model.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords don't match!");
+            throw new IllegalArgumentException(PASSWORDS_DONT_MATCH_EXCEPTION);
         }
 
         this.userService.register(this.modelMapper.map(model, UserServiceModel.class));

@@ -15,13 +15,14 @@
         <form class="mx-auto w-25" th:method="post" th:action="@{/login}">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Username..." name="username">
+                <input type="text" class="form-control" id="username" placeholder="Username..." name="username" th:required="required">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password..." name="password">
+                <input type="password" class="form-control" id="password" placeholder="Password..." name="password" th:required="required">
             </div>
             <hr class="hr-2"/>
+            <p class="text-sm-center">Don't have an account? <a th:href="@{/register}">Register now!</a></p>
             <div class="button-holder mt-4 mb-4 d-flex justify-content-center">
                 <button type="submit" class="btn btn-info text-white">Login</button>
             </div>

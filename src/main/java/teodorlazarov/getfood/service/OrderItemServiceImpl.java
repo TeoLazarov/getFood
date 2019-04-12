@@ -13,6 +13,8 @@ import java.util.Optional;
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
+    private static final String ORDER_ITEM_NOT_FOUND_EXCEPTION = "OrderItem not found!";
+
     private final OrderItemRepository orderItemRepository;
     private final ProductService productService;
     private final ModelMapper modelMapper;
@@ -37,7 +39,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemServiceModel findOrderItemById(String id) {
-        OrderItem orderItem = this.orderItemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("OrderItem not found!"));
+        OrderItem orderItem = this.orderItemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ORDER_ITEM_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
     }

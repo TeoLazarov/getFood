@@ -9,10 +9,12 @@ import teodorlazarov.getfood.repository.UserRoleRepository;
 
 import javax.annotation.PostConstruct;
 
+import static teodorlazarov.getfood.constants.GlobalConstants.*;
+
 @Component
 public class DataBaseSeeder {
 
-    //TODO change repositories with services
+    //TODO change repositories with services?
 
     private final UserRoleRepository userRoleRepository;
     private final ProductTypeRepository productTypeRepository;
@@ -27,16 +29,16 @@ public class DataBaseSeeder {
     public void seedUserRoles() {
         if (this.userRoleRepository.findAll().isEmpty()) {
             UserRole root = new UserRole();
-            root.setRole("ROLE_ROOT");
+            root.setRole(USER_ROLE_ROOT);
 
             UserRole admin = new UserRole();
-            admin.setRole("ROLE_ADMIN");
-
-            UserRole user = new UserRole();
-            user.setRole("ROLE_USER");
+            admin.setRole(USER_ROLE_ADMIN);
 
             UserRole employee = new UserRole();
-            employee.setRole("ROLE_EMPLOYEE");
+            employee.setRole(USER_ROLE_EMPLOYEE);
+
+            UserRole user = new UserRole();
+            user.setRole(USER_ROLE_USER);
 
             this.userRoleRepository.save(root);
             this.userRoleRepository.save(admin);
@@ -47,9 +49,16 @@ public class DataBaseSeeder {
 
     @PostConstruct
     public void seedProductTypes(){
-        //SALAD, BURGER, PASTA, POTATOES, DESSERT, SAUCE, BEVERAGE;
         if (this.productTypeRepository.findAll().isEmpty()){
-            String[] products = {"Salad", "Burger", "Pasta", "Potatoes", "Dessert", "Sauce", "Beverage"};
+            String[] products = {
+                    PRODUCT_CATEGORY_SALAD,
+                    PRODUCT_CATEGORY_BURGER,
+                    PRODUCT_CATEGORY_PASTA,
+                    PRODUCT_CATEGORY_POTATOES,
+                    PRODUCT_CATEGORY_DESSERT,
+                    PRODUCT_CATEGORY_SAUCE,
+                    PRODUCT_CATEGORY_BEVERAGE
+            };
 
             for (String product : products) {
                 ProductType productType = new ProductType();

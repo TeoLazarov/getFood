@@ -23,7 +23,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="orderItem,iter : ${model}">
+                <th:block th:if="${model.size()>0}" th:each="orderItem,iter : ${model}">
                     <tr>
                         <th scope="row" th:text="${iter.index+1}"></th>
                         <td th:text="${orderItem.product.name}"></td>
@@ -36,23 +36,30 @@
                 </tbody>
             </table>
         </div>
+        <div class="row justify-content-center">
+            <th:block th:if="${model.size()<=0}">
+                <h1 class="text-center">Your shopping cart is empty!</h1>
+            </th:block>
+        </div>
         <div class="row justify-content-end">
             <h4>Total: <span th:text="${total}"></span>lv</h4>
         </div>
-        <form class="row justify-content-end" th:method="post" th:action="@{/orders/create}">
-            <div class="col-4 form-group">
-                <label for="address" class="font-weight-bold">Choose delivery address</label>
-                <select class="form-control" id="address" name="address" th:required="required">
-                    <option value="" selected="selected" disabled="disabled">Choose an address...</option>
-                    <th:block th:each="address : ${addresses}">
-                        <option th:value="${address.id}" th:text="${address.name}"></option>
-                    </th:block>
-                </select>
-            </div>
-            <div class="button-holder mt-4 mb-4 d-flex justify-content-center">
-                <button type="submit" class="btn btn-success btn-lg m-2" id="order">Order</button>
-            </div>
-        </form>
+        <th:block th:if="${model.size()>0}">
+            <form class="row justify-content-end" th:method="post" th:action="@{/orders/create}">
+                <div class="col-4 form-group">
+                    <label for="address" class="font-weight-bold">Choose delivery address</label>
+                    <select class="form-control" id="address" name="address" th:required="required">
+                        <option value="" selected="selected" disabled="disabled">Choose an address...</option>
+                        <th:block th:each="address : ${addresses}">
+                            <option th:value="${address.id}" th:text="${address.name}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="button-holder mt-4 mb-4 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success btn-lg m-2" id="order">Order</button>
+                </div>
+            </form>
+        </th:block>
     </div>
 </main>
 <footer class="py-5 bg-dark">

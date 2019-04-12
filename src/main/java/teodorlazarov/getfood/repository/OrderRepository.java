@@ -19,4 +19,6 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     List<Order> findTodayOrders(LocalDate date);
 
     List<Order> findAllByOrderByTimeOfOrderDesc();
+
+    List<Order> findAllByUser_UsernameAndFinishedIsFalse(String username);
 }

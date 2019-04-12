@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 @Service
 public class AddressServiceImpl implements AddressService {
 
+    private static final String USERNAME_NOT_FOUND_EXCEPTION = "Username not found!";
+    private static final String ADDRESS_NOT_FOUND_EXCEPTION = "Address not found!";
+    private static final String ADDRESS_NOT_FOUND_IN_ADDRESSES_EXCEPTION = "Address not found in your addresses!";
+
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -33,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
 
         address = this.addressRepository.saveAndFlush(address);
 
-        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION));
         user.getAddresses().add(address);
         this.userRepository.saveAndFlush(user);
 
@@ -42,18 +46,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressServiceModel findAddressById(String id) {
-        Address address = this.addressRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Address not found!"));
+        Address address = this.addressRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ADDRESS_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(address, AddressServiceModel.class);
     }
 
     @Override
     public AddressServiceModel updateAddress(AddressServiceModel newAddress, String username) {
-        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
-        Address oldAddress = this.addressRepository.findById(newAddress.getId()).orElseThrow(()-> new IllegalArgumentException("Address not found!"));
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION));
+        Address oldAddress = this.addressRepository.findById(newAddress.getId()).orElseThrow(()-> new IllegalArgumentException(ADDRESS_NOT_FOUND_EXCEPTION));
 
         if (!user.getAddresses().contains(oldAddress)){
-            throw new IllegalArgumentException("Address not found in your addresses!");
+            throw new IllegalArgumentException(ADDRESS_NOT_FOUND_IN_ADDRESSES_EXCEPTION);
         }
 
         oldAddress.setName(newAddress.getName());
@@ -69,11 +73,11 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void deleteAddress(String addressId, String username) {
-        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
-        Address address = this.addressRepository.findById(addressId).orElseThrow(()-> new IllegalArgumentException("Address not found!"));
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION));
+        Address address = this.addressRepository.findById(addressId).orElseThrow(()-> new IllegalArgumentException(ADDRESS_NOT_FOUND_EXCEPTION));
 
         if (!user.getAddresses().contains(address)){
-            throw new IllegalArgumentException("Address not found in your addresses!");
+            throw new IllegalArgumentException(ADDRESS_NOT_FOUND_IN_ADDRESSES_EXCEPTION);
         }
 
         user.getAddresses().remove(address);
@@ -84,8 +88,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public boolean userHasAddress(String addressId, String username) {
-        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException("Username not found!"));
-        Address address = this.addressRepository.findById(addressId).orElseThrow(()-> new IllegalArgumentException("Address not found!"));
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION));
+        Address address = this.addressRepository.findById(addressId).orElseThrow(()-> new IllegalArgumentException(ADDRESS_NOT_FOUND_EXCEPTION));
 
         return user.getAddresses().contains(address);
     }

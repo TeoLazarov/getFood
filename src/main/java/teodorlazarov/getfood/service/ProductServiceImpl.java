@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final String PRODUCT_NOT_FOUND_EXCEPTION = "Product not found!";
+    private static final String PRODUCT_TYPE_NOT_FOUND_EXCEPTION = "Product type not found!";
+
     private final ProductRepository productRepository;
     private final ProductTypeService productTypeService;
     private final CloudinaryService cloudinaryService;
@@ -49,14 +52,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductServiceModel findProductById(String id) {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(product, ProductServiceModel.class);
     }
 
     @Override
     public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel, MultipartFile image) throws IOException {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND_EXCEPTION));
 
         product.setProductType(this.modelMapper.map(this.productTypeService.findProductTypeByName(productServiceModel.getProductType().getName()), ProductType.class));
         product.setName(productServiceModel.getName());
@@ -87,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         List<String> types = this.productTypeService.findAllTypes().stream().map(p -> p.getName().toLowerCase()).collect(Collectors.toList());
 
         if (!types.contains(productType.toLowerCase())) {
-            throw new IllegalArgumentException("Product type not found!");
+            throw new IllegalArgumentException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION);
         }
 
         return this.productRepository
@@ -95,5 +98,12 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(p -> this.modelMapper.map(p, ProductServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductServiceModel> findIndexPageProducts() {
+        List<Product> products = this.productRepository.indexPageProducts();
+
+        return products.stream().map(p -> this.modelMapper.map(p, ProductServiceModel.class)).collect(Collectors.toList());
     }
 }

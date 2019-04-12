@@ -59,7 +59,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/today")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ModelAndView ordersToday(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findTodaysOrders()
@@ -74,7 +74,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/all")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ModelAndView ordersAll(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findAllOrders()

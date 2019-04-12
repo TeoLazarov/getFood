@@ -17,6 +17,10 @@ import java.util.stream.Collectors;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
+    private static final Long SHOPPING_CART_DAYS_BEFORE_EXPIRATION = 5L;
+    private static final String SHOPPING_CART_NOT_FOUND_EXCEPTION = "Shopping cart not found!";
+    private static final String PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION = "Product quantity cannot be less than 1!";
+
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductService productService;
     private final OrderItemService orderItemService;
@@ -33,7 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartServiceModel createShoppingCart() {
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setExpiresOn(LocalDate.now().plusDays(5L));
+        shoppingCart.setExpiresOn(LocalDate.now().plusDays(SHOPPING_CART_DAYS_BEFORE_EXPIRATION));
 
         return this.modelMapper
                 .map(this.shoppingCartRepository.saveAndFlush(shoppingCart), ShoppingCartServiceModel.class);
@@ -41,7 +45,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartServiceModel findShoppingCartById(String id) {
-        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Shopping cart not found!"));
+        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(SHOPPING_CART_NOT_FOUND_EXCEPTION));
         ShoppingCartServiceModel shoppingCartServiceModel = this.modelMapper.map(shoppingCart, ShoppingCartServiceModel.class);
 
         shoppingCartServiceModel.setOrderItems(shoppingCart.getItems().stream().map(oi -> this.modelMapper.map(oi, OrderItemServiceModel.class)).collect(Collectors.toList()));
@@ -52,7 +56,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void addToShoppingCart(String productId, Integer quantity, String shoppingCartId) {
         if (quantity <= 0){
-            throw new IllegalArgumentException("Product quantity cannot be less than 1!");
+            throw new IllegalArgumentException(PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION);
         }
 
         ShoppingCartServiceModel shoppingCartServiceModel = this.findShoppingCartById(shoppingCartId);
@@ -76,7 +80,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private void updateShoppingCart(ShoppingCartServiceModel shoppingCartServiceModel){
-        shoppingCartServiceModel.setExpiresOn(LocalDate.now().plusDays(5L));
+        shoppingCartServiceModel.setExpiresOn(LocalDate.now().plusDays(SHOPPING_CART_DAYS_BEFORE_EXPIRATION));
         ShoppingCart shoppingCart = this.modelMapper.map(shoppingCartServiceModel, ShoppingCart.class);
 
         this.shoppingCartRepository.saveAndFlush(shoppingCart);

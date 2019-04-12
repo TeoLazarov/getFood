@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import static teodorlazarov.getfood.constants.GlobalConstants.*;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -18,9 +20,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .disable()
                     .authorizeRequests()
-                    .antMatchers("/").permitAll()
-                    .antMatchers("/login", "/register").anonymous()
-                    .antMatchers("/admin", "/admin/**").hasAnyAuthority("ROLE_EMPLOYEE", "ROLE_ROOT", "ROLE_ADMIN")
+                    .antMatchers("/", "/login", "/register").anonymous()
+                    .antMatchers("/admin", "/admin/**").hasAnyAuthority(USER_ROLE_EMPLOYEE, USER_ROLE_ROOT, USER_ROLE_ADMIN)
                     .antMatchers("/css/**", "/js/**", "/static/img/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
@@ -29,10 +30,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .usernameParameter("username")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/")
+                    .defaultSuccessUrl("/menu")
                 .and()
                 .exceptionHandling()
-                .accessDeniedPage("/")
+                .accessDeniedPage("/menu")
                 .and()
                     .logout()
                     .logoutSuccessUrl("/");
