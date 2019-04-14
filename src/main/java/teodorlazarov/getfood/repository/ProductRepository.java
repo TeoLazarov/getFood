@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import teodorlazarov.getfood.domain.entities.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
@@ -20,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "ORDER BY RAND()\n" +
             "LIMIT 4", nativeQuery = true)
     List<Product> indexPageProducts();
+
+    Optional<Product> findByName(String name);
 }

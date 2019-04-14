@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class ProductTypeServiceImpl implements ProductTypeService{
 
     private static final String PRODUCT_TYPE_NOT_FOUND_EXCEPTION = "Product type not found!";
-    private static final String PRODUCT_NOT_FOUND_EXCEPTION = "Product not found!";
 
     private final ProductTypeRepository productTypeRepository;
     private final ModelMapper modelMapper;
@@ -45,7 +44,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 
     @Override
     public ProductTypeServiceModel findProductTypeById(String id) {
-        ProductType productType = this.productTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND_EXCEPTION));
+        ProductType productType = this.productTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
         return this.modelMapper.map(productType, ProductTypeServiceModel.class);
     }
 }

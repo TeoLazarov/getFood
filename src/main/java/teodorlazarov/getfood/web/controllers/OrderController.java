@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import teodorlazarov.getfood.domain.models.binding.OrderCreateBindingModel;
 import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.service.OrderService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +33,13 @@ public class OrderController {
     }
 
     @PostMapping("/orders/create")
-    public ModelAndView createOrder(@ModelAttribute OrderCreateBindingModel model, ModelAndView modelAndView, Principal principal) {
+    public ModelAndView createOrder(@Valid @ModelAttribute(name = "model") OrderCreateBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) {
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("model", model);
+            modelAndView.setViewName("redirect:/cart");
+            return modelAndView;
+        }
+
         this.orderService.createOrder(principal.getName(), model.getAddress());
         modelAndView.setViewName("redirect:/orders");
 
