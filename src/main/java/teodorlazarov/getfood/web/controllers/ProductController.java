@@ -19,6 +19,7 @@ import teodorlazarov.getfood.service.ProductService;
 import teodorlazarov.getfood.service.ProductTypeService;
 import teodorlazarov.getfood.validation.ProductCreateValidator;
 import teodorlazarov.getfood.validation.ProductEditValidator;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -48,6 +49,7 @@ public class ProductController {
     @SuppressWarnings("Duplicates")
     @GetMapping("/products/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PageTitle(value = "Create Product")
     public ModelAndView create(@ModelAttribute(name = "model") ProductCreateBindingModel model, @ModelAttribute ProductTypeServiceModel types, ModelAndView modelAndView) {
         modelAndView.addObject("types", this.productTypeService.findAllTypes()
                 .stream()
@@ -83,6 +85,7 @@ public class ProductController {
 
     @GetMapping("/products/all")
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PageTitle(value = "All Products")
     public ModelAndView all(ModelAndView modelAndView) {
         modelAndView.setViewName("product-all");
 
@@ -103,6 +106,7 @@ public class ProductController {
     @SuppressWarnings("Duplicates")
     @GetMapping("/products/edit/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PageTitle(value = "Edit Product")
     public ModelAndView edit(@PathVariable String id, ModelAndView modelAndView, @ModelAttribute(name = "model") ProductEditBindingModel model) {
         ProductServiceModel productServiceModel = this.productService.findProductById(id);
         ProductViewModel productViewModel = this.modelMapper.map(productServiceModel, ProductViewModel.class);
@@ -150,6 +154,7 @@ public class ProductController {
     }
 
     @GetMapping("/menu")
+    @PageTitle(value = "Menu")
     public ModelAndView menu(ModelAndView modelAndView) {
         modelAndView.setViewName("menu");
 
@@ -175,6 +180,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/view/{id}")
+    @PageTitle(value = "Product")
     public ModelAndView view(@ModelAttribute(name = "model") ProductAddToCartBindingModel model, Model modell, @PathVariable String id, ModelAndView modelAndView) {
         ProductServiceModel productServiceModel = this.productService.findProductById(id);
         ProductViewModel product = this.modelMapper.map(productServiceModel, ProductViewModel.class);

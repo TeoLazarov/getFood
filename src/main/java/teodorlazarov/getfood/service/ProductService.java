@@ -21,4 +21,6 @@ public interface ProductService {
     List<ProductServiceModel> findAllNotHiddenProductsByType(String productType);
 
     List<ProductServiceModel> findIndexPageProducts();
+
+    boolean isProductHidden(String productId);
 }

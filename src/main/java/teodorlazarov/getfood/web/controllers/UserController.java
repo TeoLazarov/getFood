@@ -18,6 +18,7 @@ import teodorlazarov.getfood.service.OrderService;
 import teodorlazarov.getfood.service.UserService;
 import teodorlazarov.getfood.validation.UserProfileEditValidator;
 import teodorlazarov.getfood.validation.UserRegisterValidator;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -28,8 +29,6 @@ import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
-
-    private static final String PASSWORDS_DONT_MATCH_EXCEPTION = "Passwords don't match!";
 
     private final UserService userService;
     private final OrderService orderService;
@@ -48,6 +47,7 @@ public class UserController {
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
+    @PageTitle(value = "Login")
     public ModelAndView login(ModelAndView modelAndView) {
         modelAndView.setViewName("login");
 
@@ -56,6 +56,7 @@ public class UserController {
 
     @GetMapping("/register")
     @PreAuthorize("isAnonymous()")
+    @PageTitle(value = "Register")
     public ModelAndView register(ModelAndView modelAndView, @ModelAttribute(name = "model") UserRegisterBindingModel model) {
         modelAndView.addObject("model", model);
         modelAndView.setViewName("register");
@@ -81,6 +82,7 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PageTitle(value = "Users")
     public ModelAndView users(ModelAndView modelAndView) {
         modelAndView.setViewName("users");
 
@@ -108,6 +110,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PageTitle(value = "Profile")
     public ModelAndView profile(ModelAndView modelAndView, Principal principal) {
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
         UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
@@ -122,6 +125,7 @@ public class UserController {
 
     @SuppressWarnings("Duplicates")
     @GetMapping("/profile/edit")
+    @PageTitle(value = "Edit Profile")
     public ModelAndView profileEdit(ModelAndView modelAndView, @ModelAttribute(name = "model") UserProfileBindingModel model, Principal principal) {
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
         UserProfileViewModel user = this.modelMapper.map(userPrincipal, UserProfileViewModel.class);
@@ -156,6 +160,7 @@ public class UserController {
 
     @GetMapping("/admin/user/{username}")
     @PreAuthorize("hasRole('EMPLOYEE')")
+    @PageTitle(value = "User")
     public ModelAndView profileViewAdmin(@PathVariable String username, ModelAndView modelAndView) {
         UserServiceModel userServiceModel = this.userService.findUserByUsername(username);
         UserProfileViewModel user = this.modelMapper.map(userServiceModel, UserProfileViewModel.class);
@@ -168,6 +173,7 @@ public class UserController {
 
     @GetMapping("/admin/user/{username}/change-role/{role}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PageTitle(value = "Change Role")
     public ModelAndView userChangeRole(@PathVariable String username, @PathVariable String role, ModelAndView modelAndView) {
         this.userService.changeUserRole(username, role);
 

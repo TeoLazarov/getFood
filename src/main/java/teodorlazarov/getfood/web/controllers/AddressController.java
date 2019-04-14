@@ -13,6 +13,7 @@ import teodorlazarov.getfood.domain.models.binding.AddressCreateBindingModel;
 import teodorlazarov.getfood.domain.models.service.AddressServiceModel;
 import teodorlazarov.getfood.domain.models.view.AddressViewModel;
 import teodorlazarov.getfood.service.AddressService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -30,6 +31,7 @@ public class AddressController {
     }
 
     @GetMapping("/addresses/add")
+    @PageTitle(value = "Create Address")
     public ModelAndView create(ModelAndView modelAndView, @ModelAttribute(name = "model") AddressCreateBindingModel model){
         modelAndView.addObject("model", model);
         modelAndView.setViewName("address-add");
@@ -53,6 +55,7 @@ public class AddressController {
     }
 
     @GetMapping("/addresses/view/{id}")
+    @PageTitle(value = "Address")
     public ModelAndView view(@PathVariable String id, @ModelAttribute(name = "model") AddressCreateBindingModel model, ModelAndView modelAndView, Principal principal){
         if (!this.addressService.userHasAddress(id, principal.getName())){
             modelAndView.setViewName("redirect:/profile");
@@ -97,6 +100,7 @@ public class AddressController {
     }
 
     @GetMapping("/addresses/view/{id}/delete")
+    @PageTitle(value = "Delete Address")
     public ModelAndView delete(@PathVariable String id, ModelAndView modelAndView, Principal principal){
         if (!this.addressService.userHasAddress(id, principal.getName())){
             modelAndView.setViewName("redirect:/profile");

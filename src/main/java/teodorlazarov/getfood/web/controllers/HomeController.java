@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.view.ProductViewModel;
 import teodorlazarov.getfood.service.ProductService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class HomeController {
 
     @GetMapping("/")
     @PreAuthorize("isAnonymous()")
+    @PageTitle("Index")
     public ModelAndView home(ModelAndView modelAndView){
         List<ProductViewModel> products = this.productService
                 .findIndexPageProducts()

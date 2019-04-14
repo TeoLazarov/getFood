@@ -20,6 +20,7 @@ import teodorlazarov.getfood.domain.models.view.ProductViewModel;
 import teodorlazarov.getfood.domain.models.view.ShoppingCartViewModel;
 import teodorlazarov.getfood.service.ShoppingCartService;
 import teodorlazarov.getfood.service.UserService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -42,6 +43,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/cart")
+    @PageTitle(value = "Shopping Cart")
     public ModelAndView shoppingCart(ModelAndView modelAndView, Principal principal) {
         //TODO make it thinner
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
@@ -78,6 +80,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/cart/remove/{id}")
+    @PageTitle(value = "Remove From Shopping Cart")
     public ModelAndView removeOrderItem(@PathVariable String id, ModelAndView modelAndView, Principal principal) {
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
         this.shoppingCartService.removeOrderItem(id, user.getShoppingCart().getId());

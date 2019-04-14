@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.binding.OrderCreateBindingModel;
 import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.service.OrderService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -47,6 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
+    @PageTitle(value = "Orders")
     public ModelAndView viewOrders(ModelAndView modelAndView, Principal principal) {
         List<OrderViewModel> orders = this.orderService.findAllOrdersByUsername(principal.getName()).stream().map(o -> this.modelMapper.map(o, OrderViewModel.class)).collect(Collectors.toList());
 
@@ -57,6 +59,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/view/{id}")
+    @PageTitle(value = "Order")
     public ModelAndView viewOrder(@PathVariable String id, ModelAndView modelAndView) {
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
 
@@ -68,6 +71,7 @@ public class OrderController {
 
     @GetMapping("/admin/orders/today")
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PageTitle(value = "Today's Orders")
     public ModelAndView ordersToday(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findTodaysOrders()
@@ -83,6 +87,7 @@ public class OrderController {
 
     @GetMapping("/admin/orders/all")
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PageTitle(value = "All Orders")
     public ModelAndView ordersAll(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findAllOrders()
@@ -97,6 +102,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/view/{id}")
+    @PageTitle(value = "Order")
     public ModelAndView orderView(@PathVariable String id, ModelAndView modelAndView){
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
 
@@ -107,6 +113,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/finish/{id}")
+    @PageTitle(value = "Complete Order")
     public ModelAndView orderFinish(@PathVariable String id, ModelAndView modelAndView){
         this.orderService.orderFinish(id);
 

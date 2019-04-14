@@ -106,4 +106,11 @@ public class ProductServiceImpl implements ProductService {
 
         return products.stream().map(p -> this.modelMapper.map(p, ProductServiceModel.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean isProductHidden(String productId) {
+        Product product = this.productRepository.findById(productId).orElse(null);
+
+        return product == null || product.isHidden();
+    }
 }
