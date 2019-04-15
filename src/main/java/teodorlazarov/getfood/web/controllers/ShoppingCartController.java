@@ -3,20 +3,17 @@ package teodorlazarov.getfood.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teodorlazarov.getfood.domain.models.binding.ProductAddToCartBindingModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.domain.models.view.AddressViewModel;
 import teodorlazarov.getfood.domain.models.view.OrderItemViewModel;
-import teodorlazarov.getfood.domain.models.view.ProductViewModel;
 import teodorlazarov.getfood.domain.models.view.ShoppingCartViewModel;
 import teodorlazarov.getfood.service.ShoppingCartService;
 import teodorlazarov.getfood.service.UserService;
@@ -88,4 +85,7 @@ public class ShoppingCartController {
         modelAndView.setViewName("redirect:/cart");
         return modelAndView;
     }
+
+
+
 }

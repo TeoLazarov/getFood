@@ -2,6 +2,7 @@ package teodorlazarov.getfood.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
@@ -115,5 +116,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartServiceModel.getOrderItems().removeAll(toBeRemoved);
 
         this.updateShoppingCart(shoppingCartServiceModel);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Sofia")
+    private void clearExpiredShoppingCarts(){
+        List<ShoppingCartServiceModel> shoppingCarts = this.shoppingCartRepository
+                .findAllByExpiresOn(LocalDate.now())
+                .stream()
+                .map(s -> this.modelMapper.map(s, ShoppingCartServiceModel.class))
+                .collect(Collectors.toList());
+
+        if (shoppingCarts.size() > 0){
+            for (ShoppingCartServiceModel shoppingCart : shoppingCarts) {
+                shoppingCart.getOrderItems().clear();
+                this.shoppingCartRepository.save(this.modelMapper.map(shoppingCart, ShoppingCart.class));
+                this.updateShoppingCart(shoppingCart);
+            }
+        }
     }
 }
