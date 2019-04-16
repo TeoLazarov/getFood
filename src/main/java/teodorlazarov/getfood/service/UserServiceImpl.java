@@ -12,6 +12,9 @@ import teodorlazarov.getfood.domain.entities.UserRole;
 import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.UserRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
+import teodorlazarov.getfood.web.errors.exceptions.UnauthorizedActionException;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -20,14 +23,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static teodorlazarov.getfood.constants.Errors.*;
 import static teodorlazarov.getfood.constants.GlobalConstants.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    private static final String USERNAME_NOT_FOUND_EXCEPTION = "Username not found.";
-    private static final String WRONG_PASSWORD_EXCEPTION = "Incorrect password!";
-    private static final String CANNOT_MODIFY_ROLE_EXCEPTION = "Role cannot be modified";
 
     private final UserRepository userRepository;
     private final UserRoleService userRoleService;
@@ -86,10 +86,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel editProfile(UserServiceModel model, String oldPassword) {
-        User user = this.userRepository.findUserByUsername(model.getUsername()).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION));
+        User user = this.userRepository.findUserByUsername(model.getUsername()).orElseThrow(() -> new NotFoundException(USERNAME_NOT_FOUND_EXCEPTION));
 
         if (!this.bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new IllegalArgumentException(WRONG_PASSWORD_EXCEPTION);
+            throw new ServiceGeneralException(WRONG_PASSWORD_EXCEPTION);
         }
 
         user.setPassword(!"".equals(model.getPassword()) ? this.bCryptPasswordEncoder.encode(model.getPassword()) : user.getPassword());
@@ -102,13 +102,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findUserByUsername(String username) {
-        return this.modelMapper.map(this.userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalArgumentException(USERNAME_NOT_FOUND_EXCEPTION)), UserServiceModel.class);
+        return this.modelMapper.map(this.userRepository.findUserByUsername(username).orElseThrow(() -> new NotFoundException(USERNAME_NOT_FOUND_EXCEPTION)), UserServiceModel.class);
     }
 
     @Override
     public void changeUserRole(String username, String roleName) {
         if (USER_ROLE_ROOT.equals(roleName)){
-            throw new IllegalArgumentException(CANNOT_MODIFY_ROLE_EXCEPTION);
+            throw new UnauthorizedActionException(CANNOT_MODIFY_ROLE_EXCEPTION);
         }
 
         UserServiceModel user = this.findUserByUsername(username);

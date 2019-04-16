@@ -7,13 +7,14 @@ import teodorlazarov.getfood.domain.entities.OrderItem;
 import teodorlazarov.getfood.domain.entities.Product;
 import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 import teodorlazarov.getfood.repository.OrderItemRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 
 import java.util.Optional;
 
+import static teodorlazarov.getfood.constants.Errors.*;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
-
-    private static final String ORDER_ITEM_NOT_FOUND_EXCEPTION = "OrderItem not found!";
 
     private final OrderItemRepository orderItemRepository;
     private final ProductService productService;
@@ -39,14 +40,14 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public OrderItemServiceModel findOrderItemById(String id) {
-        OrderItem orderItem = this.orderItemRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ORDER_ITEM_NOT_FOUND_EXCEPTION));
+        OrderItem orderItem = this.orderItemRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_ITEM_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
     }
 
     @Override
     public OrderItemServiceModel findOrderItemByProductId(String productId) {
-        OrderItem orderItem = this.orderItemRepository.findOrderItemByProduct_Id(productId).orElse(null);
+        OrderItem orderItem = this.orderItemRepository.findOrderItemByProduct_Id(productId).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(orderItem, OrderItemServiceModel.class);
     }

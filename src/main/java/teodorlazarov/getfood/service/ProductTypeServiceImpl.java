@@ -4,17 +4,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.ProductType;
-import teodorlazarov.getfood.domain.models.service.ProductServiceModel;
 import teodorlazarov.getfood.domain.models.service.ProductTypeServiceModel;
 import teodorlazarov.getfood.repository.ProductTypeRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static teodorlazarov.getfood.constants.Errors.PRODUCT_TYPE_NOT_FOUND_EXCEPTION;
+
 @Service
 public class ProductTypeServiceImpl implements ProductTypeService{
-
-    private static final String PRODUCT_TYPE_NOT_FOUND_EXCEPTION = "Product type not found!";
 
     private final ProductTypeRepository productTypeRepository;
     private final ModelMapper modelMapper;
@@ -30,7 +30,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
         return this.productTypeRepository
                 .findByName(name)
                 .map(t -> this.modelMapper.map(t, ProductTypeServiceModel.class))
-                .orElseThrow(() -> new IllegalArgumentException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
+                .orElseThrow(() -> new NotFoundException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ProductTypeServiceImpl implements ProductTypeService{
 
     @Override
     public ProductTypeServiceModel findProductTypeById(String id) {
-        ProductType productType = this.productTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
+        ProductType productType = this.productTypeRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
         return this.modelMapper.map(productType, ProductTypeServiceModel.class);
     }
 }

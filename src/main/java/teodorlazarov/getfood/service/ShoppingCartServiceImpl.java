@@ -9,18 +9,20 @@ import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 import teodorlazarov.getfood.domain.models.service.ProductServiceModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.repository.ShoppingCartRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static teodorlazarov.getfood.constants.Errors.*;
+
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private static final Long SHOPPING_CART_DAYS_BEFORE_EXPIRATION = 5L;
-    private static final String SHOPPING_CART_NOT_FOUND_EXCEPTION = "Shopping cart not found!";
-    private static final String PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION = "Product quantity cannot be less than 1!";
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductService productService;
@@ -46,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartServiceModel findShoppingCartById(String id) {
-        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(SHOPPING_CART_NOT_FOUND_EXCEPTION));
+        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new NotFoundException(SHOPPING_CART_NOT_FOUND_EXCEPTION));
         ShoppingCartServiceModel shoppingCartServiceModel = this.modelMapper.map(shoppingCart, ShoppingCartServiceModel.class);
 
         shoppingCartServiceModel.setOrderItems(shoppingCart.getItems().stream().map(oi -> this.modelMapper.map(oi, OrderItemServiceModel.class)).collect(Collectors.toList()));
@@ -57,7 +59,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void addToShoppingCart(String productId, Integer quantity, String shoppingCartId) {
         if (quantity <= 0){
-            throw new IllegalArgumentException(PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION);
+            throw new ServiceGeneralException(PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION);
         }
 
         ShoppingCartServiceModel shoppingCartServiceModel = this.findShoppingCartById(shoppingCartId);

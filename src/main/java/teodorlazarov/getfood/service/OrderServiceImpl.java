@@ -2,15 +2,15 @@ package teodorlazarov.getfood.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.Order;
-import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.models.service.AddressServiceModel;
 import teodorlazarov.getfood.domain.models.service.OrderServiceModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.OrderRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,13 +18,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static teodorlazarov.getfood.constants.Errors.*;
+
 @Service
 public class OrderServiceImpl implements OrderService {
-
-    private static final String SHOPPING_CART_IS_EMPTY_EXCEPTION = "Shopping cart is empty!";
-    private static final String USER_HAS_ACTIVE_ORDER_EXCEPTION = "User has an active order already.";
-    private static final String ADDRESS_NOT_VALID_EXCEPTION = "Address is not valid!";
-    private static final String ORDER_NOT_FOUND_EXCEPTION = "Order not found!";
 
     private final OrderRepository orderRepository;
     private final UserService userService;
@@ -47,9 +44,9 @@ public class OrderServiceImpl implements OrderService {
         List<AddressServiceModel> addresses = user.getAddresses();
 
         if (shoppingCartServiceModel.getOrderItems().size() <= 0) {
-            throw new IllegalArgumentException(SHOPPING_CART_IS_EMPTY_EXCEPTION);
+            throw new ServiceGeneralException(SHOPPING_CART_IS_EMPTY_EXCEPTION);
         } else if (this.userHasUnfinishedOrder(username)){
-            throw new IllegalArgumentException(USER_HAS_ACTIVE_ORDER_EXCEPTION);
+            throw new ServiceGeneralException(USER_HAS_ACTIVE_ORDER_EXCEPTION);
         }
 
         OrderServiceModel orderServiceModel = new OrderServiceModel();
@@ -78,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
 
         //todo check if empty also
         if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
-            throw new IllegalArgumentException(ADDRESS_NOT_VALID_EXCEPTION);
+            throw new ServiceGeneralException(ADDRESS_NOT_VALID_EXCEPTION);
         }
 
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
@@ -110,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderServiceModel findOrderById(String id) {
         //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
-        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ORDER_NOT_FOUND_EXCEPTION));
+        Order order = this.orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
     }
