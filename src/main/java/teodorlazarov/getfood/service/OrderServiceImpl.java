@@ -12,6 +12,7 @@ import teodorlazarov.getfood.repository.OrderRepository;
 import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
+import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,17 +28,19 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
     private final ModelMapper modelMapper;
+    private final MailService mailService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, ShoppingCartService shoppingCartService, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, ShoppingCartService shoppingCartService, ModelMapper modelMapper, MailService mailService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.shoppingCartService = shoppingCartService;
         this.modelMapper = modelMapper;
+        this.mailService = mailService;
     }
 
     @Override
-    public OrderServiceModel createOrder(String username, String addressId) {
+    public OrderServiceModel createOrder(String username, String addressId) throws MessagingException {
         UserServiceModel user = this.userService.findUserByUsername(username);
         String shoppingCartId = user.getShoppingCart().getId();
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
@@ -81,9 +84,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
         order = this.orderRepository.saveAndFlush(order);
 
-        this.shoppingCartService.removeOrderItems(shoppingCartServiceModel.getOrderItems(), shoppingCartServiceModel.getId());
+        OrderServiceModel result = this.modelMapper.map(order, OrderServiceModel.class);
 
-        return this.modelMapper.map(order, OrderServiceModel.class);
+        this.shoppingCartService.removeOrderItems(shoppingCartServiceModel.getOrderItems(), shoppingCartServiceModel.getId());
+        this.mailService.sendEmail(result);
+        return result;
     }
 
     @Override

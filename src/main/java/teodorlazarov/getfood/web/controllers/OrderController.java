@@ -15,6 +15,7 @@ import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.service.OrderService;
 import teodorlazarov.getfood.web.annotations.PageTitle;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -34,7 +35,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders/create")
-    public ModelAndView createOrder(@Valid @ModelAttribute(name = "model") OrderCreateBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) {
+    public ModelAndView createOrder(@Valid @ModelAttribute(name = "model") OrderCreateBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) throws MessagingException {
         if(bindingResult.hasErrors()){
             modelAndView.addObject("model", model);
             modelAndView.setViewName("redirect:/cart");

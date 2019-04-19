@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<header>
+</header>
+<main>
+    <h1 th:text="|Hello, ${order.getUser().getUsername()}|"></h1>
+    <h3>You have successfully placed an order with the following details:</h3>
+    <div>
+        <p th:text="|Order id: ${order.getId()}|"></p>
+        <p th:text="|Time of order: ${#temporals.format(order.timeOfOrder, 'dd.MM.YYYY HH:mm')}|"></p>
+        <p th:text="|Delivery address: ${order.addressCity}, ${order.addressAddress}|"></p>
+        <p th:text="|Phone number: ${order.getAddressPhoneNumber()}|"></p>
+        <p th:text="|Notes: ${order.getAddressNotes()}|"></p>
+    </div>
+    <div>
+        <table style="text-align:center">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item, iter : ${order.orderItems}">
+                <tr>
+                    <th scope="row" th:text="${iter.index+1}"></th>
+                    <td th:text="${item.product.name}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${item.product.price}"></td>
+                </tr>
+            </th:block>
+            <tr>
+                <th></th>
+                <td></td>
+                <td></td>
+                <td th:text="|Total: ${order.totalPrice}lv|"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <p>We will be soon at your door with the products you ordered.</p>
+        <p>Best regards,</p>
+        <p>getFood</p>
+    </div>
+</main>
+<footer>
+</footer>
+</body>
+</html>
