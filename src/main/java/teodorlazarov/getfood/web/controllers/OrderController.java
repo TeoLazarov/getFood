@@ -51,7 +51,11 @@ public class OrderController {
     @GetMapping("/orders")
     @PageTitle(value = "Orders")
     public ModelAndView viewOrders(ModelAndView modelAndView, Principal principal) {
-        List<OrderViewModel> orders = this.orderService.findAllOrdersByUsername(principal.getName()).stream().map(o -> this.modelMapper.map(o, OrderViewModel.class)).collect(Collectors.toList());
+        List<OrderViewModel> orders = this.orderService
+                .findAllOrdersByUsername(principal.getName())
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderViewModel.class))
+                .collect(Collectors.toList());
 
         modelAndView.addObject("orders", orders);
         modelAndView.setViewName("order-all-user");
@@ -103,6 +107,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/view/{id}")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PageTitle(value = "Order")
     public ModelAndView orderView(@PathVariable String id, ModelAndView modelAndView){
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
@@ -114,6 +119,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/finish/{id}")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PageTitle(value = "Complete Order")
     public ModelAndView orderFinish(@PathVariable String id, ModelAndView modelAndView){
         this.orderService.orderFinish(id);

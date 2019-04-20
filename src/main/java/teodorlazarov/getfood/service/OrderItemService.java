@@ -2,8 +2,6 @@ package teodorlazarov.getfood.service;
 
 import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 
-import java.util.Optional;
-
 public interface OrderItemService {
 
     OrderItemServiceModel createOrderItem(String productId, Integer quantity);

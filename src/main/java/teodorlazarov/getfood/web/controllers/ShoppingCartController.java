@@ -2,6 +2,7 @@ package teodorlazarov.getfood.web.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
@@ -42,22 +44,30 @@ public class ShoppingCartController {
     @GetMapping("/cart")
     @PageTitle(value = "Shopping Cart")
     public ModelAndView shoppingCart(ModelAndView modelAndView, Principal principal) {
-        //TODO make it thinner
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
-
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(user.getShoppingCart().getId());
-
         ShoppingCartViewModel model = this.modelMapper.map(shoppingCartServiceModel, ShoppingCartViewModel.class);
-        model.setOrderItems(shoppingCartServiceModel.getOrderItems().stream().map(oi -> this.modelMapper.map(oi, OrderItemViewModel.class)).collect(Collectors.toList()));
 
-        BigDecimal total = model.getOrderItems().stream().map(oi -> oi.getProduct().getPrice().multiply(BigDecimal.valueOf(oi.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+        model.setOrderItems(shoppingCartServiceModel.getOrderItems()
+                .stream()
+                .map(oi -> this.modelMapper.map(oi, OrderItemViewModel.class))
+                .collect(Collectors.toList()));
 
-        List<AddressViewModel> addresses = user.getAddresses().stream().map(a -> this.modelMapper.map(a, AddressViewModel.class)).collect(Collectors.toList());
+        BigDecimal total = model.getOrderItems()
+                .stream()
+                .map(oi -> oi.getProduct().getPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<AddressViewModel> addresses = user.getAddresses()
+                .stream()
+                .map(a -> this.modelMapper.map(a, AddressViewModel.class))
+                .collect(Collectors.toList());
 
         modelAndView.addObject("model", model.getOrderItems());
         modelAndView.addObject("total", total);
         modelAndView.addObject("addresses", addresses);
         modelAndView.setViewName("shopping-cart");
+
         return modelAndView;
     }
 
@@ -73,6 +83,7 @@ public class ShoppingCartController {
         this.shoppingCartService.addToShoppingCart(model.getId(), model.getQuantity(), user.getShoppingCart().getId());
 
         modelAndView.setViewName("redirect:/cart");
+
         return modelAndView;
     }
 
@@ -83,6 +94,7 @@ public class ShoppingCartController {
         this.shoppingCartService.removeOrderItem(id, user.getShoppingCart().getId());
 
         modelAndView.setViewName("redirect:/cart");
+
         return modelAndView;
     }
 

@@ -1,7 +1,5 @@
 package teodorlazarov.getfood.domain.models.service;
 
-import teodorlazarov.getfood.domain.entities.ProductType;
-
 import java.math.BigDecimal;
 
 public class ProductServiceModel {

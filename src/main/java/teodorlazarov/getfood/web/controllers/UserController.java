@@ -80,7 +80,7 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PageTitle(value = "Users")
     public ModelAndView users(ModelAndView modelAndView) {
@@ -89,7 +89,7 @@ public class UserController {
         return modelAndView;
     }
 
-    //move this to UserApiController and move the business logic out of the controller
+    //todo move this to UserApiController and move the business logic out of the controller
     @GetMapping(value = "/fetch/users", produces = "application/json")
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -110,6 +110,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
     @PageTitle(value = "Profile")
     public ModelAndView profile(ModelAndView modelAndView, Principal principal) {
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
@@ -125,6 +126,7 @@ public class UserController {
 
     @SuppressWarnings("Duplicates")
     @GetMapping("/profile/edit")
+    @PreAuthorize("isAuthenticated()")
     @PageTitle(value = "Edit Profile")
     public ModelAndView profileEdit(ModelAndView modelAndView, @ModelAttribute(name = "model") UserProfileBindingModel model, Principal principal) {
         UserDetails userPrincipal = this.userService.loadUserByUsername(principal.getName());
@@ -140,6 +142,7 @@ public class UserController {
 
     @SuppressWarnings("Duplicates")
     @PostMapping("/profile/edit")
+    @PreAuthorize("isAuthenticated()")
     public ModelAndView profileEditConfirm(@Valid @ModelAttribute(name = "model") UserProfileBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) {
         model.setUsername(principal.getName());
         this.userProfileEditValidator.validate(model, bindingResult);
@@ -177,7 +180,7 @@ public class UserController {
     public ModelAndView userChangeRole(@PathVariable String username, @PathVariable String role, ModelAndView modelAndView) {
         this.userService.changeUserRole(username, role);
 
-        modelAndView.setViewName("redirect:/users");
+        modelAndView.setViewName("redirect:/admin/users");
 
         return modelAndView;
     }

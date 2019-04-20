@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static teodorlazarov.getfood.constants.Errors.PRODUCT_TYPE_NOT_FOUND_EXCEPTION;
 
 @Service
-public class ProductTypeServiceImpl implements ProductTypeService{
+public class ProductTypeServiceImpl implements ProductTypeService {
 
     private final ProductTypeRepository productTypeRepository;
     private final ModelMapper modelMapper;
@@ -46,5 +46,14 @@ public class ProductTypeServiceImpl implements ProductTypeService{
     public ProductTypeServiceModel findProductTypeById(String id) {
         ProductType productType = this.productTypeRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_TYPE_NOT_FOUND_EXCEPTION));
         return this.modelMapper.map(productType, ProductTypeServiceModel.class);
+    }
+
+    @Override
+    public List<ProductTypeServiceModel> findAllTypesExceptTheGivenParameter(String productType) {
+        return this.productTypeRepository
+                .findAllByNameNotOrderByNameAsc(productType)
+                .stream()
+                .map(p -> this.modelMapper.map(p, ProductTypeServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

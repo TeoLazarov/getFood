@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderServiceModel createOrder(String username, String addressId) throws MessagingException {
+    public OrderServiceModel createOrder(String username, String addressId) {
         UserServiceModel user = this.userService.findUserByUsername(username);
         String shoppingCartId = user.getShoppingCart().getId();
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
@@ -149,7 +149,10 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderServiceModel> findAllNotFinishedOrderByUsername(String username) {
         List<Order> orders = this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username);
 
-        return orders.stream().map(o -> this.modelMapper.map(o, OrderServiceModel.class)).collect(Collectors.toList());
+        return orders
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     private boolean userHasUnfinishedOrder(String username){

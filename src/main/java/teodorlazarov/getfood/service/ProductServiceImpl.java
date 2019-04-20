@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CacheEvict(value = {"menu", "allProducts"}, allEntries = true)
+    @CacheEvict(value = {"menu", "allProducts", "allProductsByType"}, allEntries = true)
     public ProductServiceModel createProduct(ProductServiceModel productServiceModel, String productTypeId, MultipartFile image) throws IOException {
         Product product = this.modelMapper.map(productServiceModel, Product.class);
         product.setProductType(this.modelMapper.map(this.productTypeService.findProductTypeById(productTypeId), ProductType.class));
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CacheEvict(value = {"menu", "allProducts"}, allEntries = true)
+    @CacheEvict(value = {"menu", "allProducts", "allProductsByType"}, allEntries = true)
     public ProductServiceModel editProduct(String id, ProductServiceModel productServiceModel, MultipartFile image) throws IOException {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND_EXCEPTION));
 
@@ -92,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "allProductsByType")
     public List<ProductServiceModel> findAllNotHiddenProductsByType(String productType) {
         List<String> types = this.productTypeService.findAllTypes().stream().map(p -> p.getName().toLowerCase()).collect(Collectors.toList());
 

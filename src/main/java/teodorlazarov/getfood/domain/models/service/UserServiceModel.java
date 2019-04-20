@@ -1,8 +1,5 @@
 package teodorlazarov.getfood.domain.models.service;
 
-import teodorlazarov.getfood.domain.entities.ShoppingCart;
-import teodorlazarov.getfood.domain.entities.UserRole;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;

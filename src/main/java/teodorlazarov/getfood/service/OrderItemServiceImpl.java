@@ -9,9 +9,8 @@ import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 import teodorlazarov.getfood.repository.OrderItemRepository;
 import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 
-import java.util.Optional;
-
-import static teodorlazarov.getfood.constants.Errors.*;
+import static teodorlazarov.getfood.constants.Errors.ORDER_ITEM_NOT_FOUND_EXCEPTION;
+import static teodorlazarov.getfood.constants.Errors.PRODUCT_NOT_FOUND_EXCEPTION;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
