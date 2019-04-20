@@ -3,6 +3,7 @@ package teodorlazarov.getfood.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,9 @@ import teodorlazarov.getfood.domain.models.view.OrderItemViewModel;
 import teodorlazarov.getfood.domain.models.view.ShoppingCartViewModel;
 import teodorlazarov.getfood.service.ShoppingCartService;
 import teodorlazarov.getfood.service.UserService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
@@ -37,7 +40,8 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/cart")
-    public ModelAndView shoppingCart(ModelAndView modelAndView, Principal principal){
+    @PageTitle(value = "Shopping Cart")
+    public ModelAndView shoppingCart(ModelAndView modelAndView, Principal principal) {
         //TODO make it thinner
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
 
@@ -58,7 +62,13 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/cart/add/")
-    public ModelAndView addToShoppingCart(@ModelAttribute ProductAddToCartBindingModel model, ModelAndView modelAndView, Principal principal){
+    public ModelAndView addToShoppingCart(@Valid @ModelAttribute(name = "model") ProductAddToCartBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("model", model);
+            modelAndView.setViewName("redirect:/products/view/" + model.getId());
+            return modelAndView;
+        }
+
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
         this.shoppingCartService.addToShoppingCart(model.getId(), model.getQuantity(), user.getShoppingCart().getId());
 
@@ -67,11 +77,15 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/cart/remove/{id}")
-    public ModelAndView removeOrderItem(@PathVariable String id, ModelAndView modelAndView, Principal principal){
+    @PageTitle(value = "Remove From Shopping Cart")
+    public ModelAndView removeOrderItem(@PathVariable String id, ModelAndView modelAndView, Principal principal) {
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
         this.shoppingCartService.removeOrderItem(id, user.getShoppingCart().getId());
 
         modelAndView.setViewName("redirect:/cart");
         return modelAndView;
     }
+
+
+
 }

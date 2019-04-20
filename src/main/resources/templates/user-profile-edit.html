@@ -12,35 +12,41 @@
     <div class="container">
         <h1 class="text-center" th:text="${user.username}"></h1>
         <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/profile/edit}">
+        <form class="mx-auto w-25" th:method="post" th:action="@{/profile/edit}" th:object="${model}">
             <div class="form-group">
                 <label class="h5 mb-1" for="fullName">Full Name</label>
-                <input type="text" class="form-control" id="fullName" placeholder="Full name..." name="fullName" th:value="${user.fullName}">
+                <input type="text" class="form-control" id="fullName" placeholder="Full name..." name="fullName" th:field="*{fullName}" th:required="required">
+                <small th:errors="*{fullName}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Email..." name="email" th:value="${user.email}">
+                <input type="email" class="form-control" id="email" placeholder="Email..." name="email" th:field="*{email}" th:required="required">
+                <small th:errors="*{email}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="phoneNumber">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone number..." name="phoneNumber"  th:value="${user.phoneNumber}">
+                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone number..." name="phoneNumber"  th:field="*{phoneNumber}" th:required="required">
+                <small th:errors="*{phoneNumber}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="newPassword">New Password</label>
                 <input type="password" class="form-control" id="newPassword" placeholder="New Password..." name="password">
+                <small th:errors="*{password}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="confirmNewPassword">Confirm New Password</label>
                 <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm New Password..." name="confirmPassword">
+                <small th:errors="*{confirmPassword}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="password">Current Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Current password..." name="oldPassword">
+                <input type="password" class="form-control" id="password" placeholder="Current password..." name="oldPassword" th:required="required">
+                <small th:errors="*{oldPassword}" class="text-danger"></small>
             </div>
             <hr class="hr-2"/>
             <div class="button-holder m-4 d-flex justify-content-center">
                 <button type="submit" class="btn btn-warning text-white">Save profile</button>
-                <a th:href="@{/}" class="btn btn-danger ml-2">Cancel</a>
+                <a th:href="@{/profile}" class="btn btn-danger ml-2">Cancel</a>
             </div>
         </form>
     </div>

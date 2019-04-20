@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import teodorlazarov.getfood.domain.models.binding.OrderCreateBindingModel;
 import teodorlazarov.getfood.domain.models.view.OrderViewModel;
 import teodorlazarov.getfood.service.OrderService;
+import teodorlazarov.getfood.web.annotations.PageTitle;
 
+import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +35,13 @@ public class OrderController {
     }
 
     @PostMapping("/orders/create")
-    public ModelAndView createOrder(@ModelAttribute OrderCreateBindingModel model, ModelAndView modelAndView, Principal principal) {
+    public ModelAndView createOrder(@Valid @ModelAttribute(name = "model") OrderCreateBindingModel model, BindingResult bindingResult, ModelAndView modelAndView, Principal principal) throws MessagingException {
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("model", model);
+            modelAndView.setViewName("redirect:/cart");
+            return modelAndView;
+        }
+
         this.orderService.createOrder(principal.getName(), model.getAddress());
         modelAndView.setViewName("redirect:/orders");
 
@@ -39,6 +49,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
+    @PageTitle(value = "Orders")
     public ModelAndView viewOrders(ModelAndView modelAndView, Principal principal) {
         List<OrderViewModel> orders = this.orderService.findAllOrdersByUsername(principal.getName()).stream().map(o -> this.modelMapper.map(o, OrderViewModel.class)).collect(Collectors.toList());
 
@@ -49,6 +60,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/view/{id}")
+    @PageTitle(value = "Order")
     public ModelAndView viewOrder(@PathVariable String id, ModelAndView modelAndView) {
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
 
@@ -59,7 +71,8 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/today")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PageTitle(value = "Today's Orders")
     public ModelAndView ordersToday(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findTodaysOrders()
@@ -74,7 +87,8 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/all")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    @PageTitle(value = "All Orders")
     public ModelAndView ordersAll(ModelAndView modelAndView) {
         List<OrderViewModel> orders = this.orderService
                 .findAllOrders()
@@ -89,6 +103,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/view/{id}")
+    @PageTitle(value = "Order")
     public ModelAndView orderView(@PathVariable String id, ModelAndView modelAndView){
         OrderViewModel order = this.modelMapper.map(this.orderService.findOrderById(id), OrderViewModel.class);
 
@@ -99,6 +114,7 @@ public class OrderController {
     }
 
     @GetMapping("/admin/orders/finish/{id}")
+    @PageTitle(value = "Complete Order")
     public ModelAndView orderFinish(@PathVariable String id, ModelAndView modelAndView){
         this.orderService.orderFinish(id);
 

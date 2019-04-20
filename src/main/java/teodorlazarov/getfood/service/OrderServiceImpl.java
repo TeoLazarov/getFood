@@ -2,21 +2,24 @@ package teodorlazarov.getfood.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.Order;
-import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.models.service.AddressServiceModel;
 import teodorlazarov.getfood.domain.models.service.OrderServiceModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.OrderRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
+import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static teodorlazarov.getfood.constants.Errors.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -25,24 +28,28 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
     private final ModelMapper modelMapper;
+    private final MailService mailService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, ShoppingCartService shoppingCartService, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserService userService, ShoppingCartService shoppingCartService, ModelMapper modelMapper, MailService mailService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.shoppingCartService = shoppingCartService;
         this.modelMapper = modelMapper;
+        this.mailService = mailService;
     }
 
     @Override
-    public OrderServiceModel createOrder(String username, String addressId) {
+    public OrderServiceModel createOrder(String username, String addressId) throws MessagingException {
         UserServiceModel user = this.userService.findUserByUsername(username);
         String shoppingCartId = user.getShoppingCart().getId();
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
         List<AddressServiceModel> addresses = user.getAddresses();
 
         if (shoppingCartServiceModel.getOrderItems().size() <= 0) {
-            throw new IllegalArgumentException("Shopping cart is empty!");
+            throw new ServiceGeneralException(SHOPPING_CART_IS_EMPTY_EXCEPTION);
+        } else if (this.userHasUnfinishedOrder(username)){
+            throw new ServiceGeneralException(USER_HAS_ACTIVE_ORDER_EXCEPTION);
         }
 
         OrderServiceModel orderServiceModel = new OrderServiceModel();
@@ -71,15 +78,17 @@ public class OrderServiceImpl implements OrderService {
 
         //todo check if empty also
         if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
-            throw new IllegalArgumentException("Address is not valid!");
+            throw new ServiceGeneralException(ADDRESS_NOT_VALID_EXCEPTION);
         }
 
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
         order = this.orderRepository.saveAndFlush(order);
 
-        this.shoppingCartService.removeOrderItems(shoppingCartServiceModel.getOrderItems(), shoppingCartServiceModel.getId());
+        OrderServiceModel result = this.modelMapper.map(order, OrderServiceModel.class);
 
-        return this.modelMapper.map(order, OrderServiceModel.class);
+        this.shoppingCartService.removeOrderItems(shoppingCartServiceModel.getOrderItems(), shoppingCartServiceModel.getId());
+        this.mailService.sendEmail(result);
+        return result;
     }
 
     @Override
@@ -103,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderServiceModel findOrderById(String id) {
         //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
-        Order order = this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+        Order order = this.orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
     }
@@ -134,5 +143,17 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.modelMapper.map(orderServiceModel, Order.class);
 
         this.orderRepository.save(order);
+    }
+
+    @Override
+    public List<OrderServiceModel> findAllNotFinishedOrderByUsername(String username) {
+        List<Order> orders = this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username);
+
+        return orders.stream().map(o -> this.modelMapper.map(o, OrderServiceModel.class)).collect(Collectors.toList());
+    }
+
+    private boolean userHasUnfinishedOrder(String username){
+        return this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username).size() > 0;
+
     }
 }

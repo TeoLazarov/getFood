@@ -3,8 +3,12 @@ package teodorlazarov.getfood.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import teodorlazarov.getfood.domain.entities.UserRole;
 import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.repository.UserRoleRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+
+import static teodorlazarov.getfood.constants.Errors.*;
 
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
@@ -20,6 +24,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRoleServiceModel getRoleByRoleName(String roleName) {
-        return this.modelMapper.map(this.userRoleRepository.findByRole(roleName), UserRoleServiceModel.class);
+        UserRole role = this.userRoleRepository.findByRole(roleName).orElseThrow(() -> new NotFoundException(USER_ROLE_NOT_FOUND_EXCEPTION));
+
+        return this.modelMapper.map(role, UserRoleServiceModel.class);
     }
 }

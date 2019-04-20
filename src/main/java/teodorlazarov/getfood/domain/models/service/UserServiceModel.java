@@ -16,7 +16,7 @@ public class UserServiceModel {
     private String email;
     private String phoneNumber;
     private LocalDate registeredOn;
-    private Set<UserRole> roles;
+    private Set<UserRoleServiceModel> roles;
     private ShoppingCartServiceModel shoppingCart;
     private List<AddressServiceModel> addresses;
 
@@ -79,11 +79,11 @@ public class UserServiceModel {
         this.registeredOn = registeredOn;
     }
 
-    public Set<UserRole> getRoles() {
+    public Set<UserRoleServiceModel> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(Set<UserRole> roles) {
+    public void setRoles(Set<UserRoleServiceModel> roles) {
         this.roles = roles;
     }
 

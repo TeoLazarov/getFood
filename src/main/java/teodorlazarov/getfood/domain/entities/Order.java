@@ -1,6 +1,8 @@
 package teodorlazarov.getfood.domain.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,8 +30,8 @@ public class Order extends BaseEntity {
 
     @ManyToMany(targetEntity = OrderItem.class)
     @JoinTable(name = "orders_order_items",
-    joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id"))
+    joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false),
+    inverseJoinColumns = @JoinColumn(name = "order_item_id", referencedColumnName = "id", nullable = false))
     public List<OrderItem> getOrderItems() {
         return this.orderItems;
     }
@@ -39,7 +41,7 @@ public class Order extends BaseEntity {
     }
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return this.user;
     }

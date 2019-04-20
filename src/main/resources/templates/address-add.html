@@ -12,26 +12,31 @@
     <div class="container">
         <h1 class="text-center">Add address</h1>
         <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/addresses/add}">
+        <form class="mx-auto w-25" th:method="post" th:action="@{/addresses/add}" th:object="${model}">
             <div class="form-group">
                 <label class="h5 mb-1" for="name">Address Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Address Name..." name="name">
+                <input type="text" class="form-control" id="name" placeholder="Address Name..." name="name" th:field="*{name}" th:required="required">
+                <small th:errors="*{name}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="city">City</label>
-                <input type="text" class="form-control" id="city" placeholder="City..." name="city">
+                <input type="text" class="form-control" id="city" placeholder="City..." name="city" th:field="*{city}" th:required="required">
+                <small th:errors="*{city}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="address">Address</label>
-                <input type="text" class="form-control" id="address" placeholder="Address..." name="address">
+                <input type="text" class="form-control" id="address" placeholder="Address..." name="address" th:field="*{address}" th:required="required">
+                <small th:errors="*{address}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="phoneNumber">Phone Number</label>
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number..." name="phoneNumber">
+                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number..." name="phoneNumber" th:field="*{phoneNumber}" th:required="required">
+                <small th:errors="*{phoneNumber}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label class="h5 mb-1" for="notes">Notes</label>
-                <textarea type="text" rows="3" class="form-control" id="notes" placeholder="Notes..." name="notes"></textarea>
+                <textarea type="text" rows="3" class="form-control" id="notes" placeholder="Notes..." name="notes" th:field="*{notes}"></textarea>
+                <small th:errors="*{notes}" class="text-danger"></small>
             </div>
             <hr class="hr-2"/>
             <div class="button-holder mt-4 mb-4 d-flex justify-content-center">

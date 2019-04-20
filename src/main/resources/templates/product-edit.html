@@ -11,37 +11,43 @@
 <main>
     <div class="container">
         <h1 class="text-center" th:text="${product.name}"></h1>
-        <img class="mx-auto d-block img-thumbnail img-fluid" width="300px" th:src="${product.image}" alt="">
+        <img class="mx-auto d-block img-thumbnail img-fluid" width="300px" height="200px" th:src="${product.image}" alt="">
         <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/products/edit/{id}(id=${product.id})}" enctype="multipart/form-data">
+        <form class="mx-auto w-25" th:method="post" th:action="@{/products/edit/{id}(id=${product.id})}" enctype="multipart/form-data" th:object="${model}">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Product name..." name="name" th:value="${product.name}">
+                <input type="text" class="form-control" id="name" placeholder="Product name..." name="name" th:field="*{name}" th:required="required">
+                <small th:errors="*{name}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Product description..." name="description" th:value="${product.description}">
+                <input type="text" class="form-control" id="description" placeholder="Product description..." name="description" th:field="*{description}">
+                <small th:errors="*{description}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="productType">Type</label>
-                <select class="form-control" id="productType" name="productType">
+                <select class="form-control" id="productType" name="productType" th:required="required">
                     <option selected="selected" th:value="${product.productType.id}" th:text="${product.productType.name}"></option>
                     <th:block th:each="type : ${types}">
                         <option th:value="${type.id}" th:text="${type.name}"></option>
                     </th:block>
                 </select>
+                <small th:errors="*{productType}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" step="0.01" min="0" class="form-control" id="price" placeholder="Product price..." name="price"  th:value="${product.price}">
+                <input type="number" step="0.01" min="0" class="form-control" id="price" placeholder="Product price..." name="price"  th:field="*{price}" th:required="required">
+                <small th:errors="*{price}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="weight">Weight in grams</label>
-                <input type="number" step="0.05" min="0" class="form-control" id="weight" placeholder="Product weight..." name="weight"  th:value="${product.weight}">
+                <input type="number" step="0.05" min="0" class="form-control" id="weight" placeholder="Product weight..." name="weight"  th:field="*{weight}" th:required="required">
+                <small th:errors="*{weight}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="image">Image</label>
                 <input type="file" class="form-control" id="image" name="image">
+                <small th:errors="*{image}" class="text-danger"></small>
             </div>
             <div class="form-group">
                 <label for="isHidden">Is hidden</label>

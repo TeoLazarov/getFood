@@ -2,20 +2,27 @@ package teodorlazarov.getfood.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.models.service.OrderItemServiceModel;
 import teodorlazarov.getfood.domain.models.service.ProductServiceModel;
 import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.repository.ShoppingCartRepository;
+import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
+import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static teodorlazarov.getfood.constants.Errors.*;
+
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
+
+    private static final Long SHOPPING_CART_DAYS_BEFORE_EXPIRATION = 5L;
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductService productService;
@@ -33,7 +40,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartServiceModel createShoppingCart() {
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setExpiresOn(LocalDate.now().plusDays(5L));
+        shoppingCart.setExpiresOn(LocalDate.now().plusDays(SHOPPING_CART_DAYS_BEFORE_EXPIRATION));
 
         return this.modelMapper
                 .map(this.shoppingCartRepository.saveAndFlush(shoppingCart), ShoppingCartServiceModel.class);
@@ -41,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartServiceModel findShoppingCartById(String id) {
-        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Shopping cart not found!"));
+        ShoppingCart shoppingCart = this.shoppingCartRepository.findById(id).orElseThrow(() -> new NotFoundException(SHOPPING_CART_NOT_FOUND_EXCEPTION));
         ShoppingCartServiceModel shoppingCartServiceModel = this.modelMapper.map(shoppingCart, ShoppingCartServiceModel.class);
 
         shoppingCartServiceModel.setOrderItems(shoppingCart.getItems().stream().map(oi -> this.modelMapper.map(oi, OrderItemServiceModel.class)).collect(Collectors.toList()));
@@ -52,7 +59,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void addToShoppingCart(String productId, Integer quantity, String shoppingCartId) {
         if (quantity <= 0){
-            throw new IllegalArgumentException("Product quantity cannot be less than 1!");
+            throw new ServiceGeneralException(PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION);
         }
 
         ShoppingCartServiceModel shoppingCartServiceModel = this.findShoppingCartById(shoppingCartId);
@@ -76,7 +83,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private void updateShoppingCart(ShoppingCartServiceModel shoppingCartServiceModel){
-        shoppingCartServiceModel.setExpiresOn(LocalDate.now().plusDays(5L));
+        shoppingCartServiceModel.setExpiresOn(LocalDate.now().plusDays(SHOPPING_CART_DAYS_BEFORE_EXPIRATION));
         ShoppingCart shoppingCart = this.modelMapper.map(shoppingCartServiceModel, ShoppingCart.class);
 
         this.shoppingCartRepository.saveAndFlush(shoppingCart);
@@ -111,5 +118,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartServiceModel.getOrderItems().removeAll(toBeRemoved);
 
         this.updateShoppingCart(shoppingCartServiceModel);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Sofia")
+    private void clearExpiredShoppingCarts(){
+        List<ShoppingCartServiceModel> shoppingCarts = this.shoppingCartRepository
+                .findAllByExpiresOn(LocalDate.now())
+                .stream()
+                .map(s -> this.modelMapper.map(s, ShoppingCartServiceModel.class))
+                .collect(Collectors.toList());
+
+        if (shoppingCarts.size() > 0){
+            for (ShoppingCartServiceModel shoppingCart : shoppingCarts) {
+                shoppingCart.getOrderItems().clear();
+                this.shoppingCartRepository.save(this.modelMapper.map(shoppingCart, ShoppingCart.class));
+                this.updateShoppingCart(shoppingCart);
+            }
+        }
     }
 }
