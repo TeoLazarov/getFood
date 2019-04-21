@@ -14,8 +14,6 @@ import static teodorlazarov.getfood.constants.GlobalConstants.*;
 @Component
 public class DataBaseSeeder {
 
-    //TODO change repositories with services?
-
     private final UserRoleRepository userRoleRepository;
     private final ProductTypeRepository productTypeRepository;
 

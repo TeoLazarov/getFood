@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import teodorlazarov.getfood.domain.entities.ShoppingCart;
 import teodorlazarov.getfood.domain.entities.User;
 import teodorlazarov.getfood.domain.entities.UserRole;
+import teodorlazarov.getfood.domain.models.service.ShoppingCartServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserRoleServiceModel;
 import teodorlazarov.getfood.domain.models.service.UserServiceModel;
 import teodorlazarov.getfood.repository.UserRepository;
@@ -50,7 +51,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
         user.setRoles(getRolesForRegistration());
         user.setRegisteredOn(LocalDate.now());
-        user.setShoppingCart(this.modelMapper.map(this.shoppingCartService.createShoppingCart(), ShoppingCart.class));
+        ShoppingCartServiceModel shoppingCart = this.shoppingCartService.createShoppingCart();
+        user.setShoppingCart(this.modelMapper.map(shoppingCart, ShoppingCart.class));
 
         return this.modelMapper.map(this.userRepository.saveAndFlush(user), UserServiceModel.class);
     }

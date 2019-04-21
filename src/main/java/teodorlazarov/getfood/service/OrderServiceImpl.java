@@ -12,7 +12,6 @@ import teodorlazarov.getfood.repository.OrderRepository;
 import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
-import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
