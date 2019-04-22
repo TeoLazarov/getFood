@@ -88,7 +88,6 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/cart/remove/{id}")
-    @PageTitle(value = "Remove From Shopping Cart")
     public ModelAndView removeOrderItem(@PathVariable String id, ModelAndView modelAndView, Principal principal) {
         UserServiceModel user = this.userService.findUserByUsername(principal.getName());
         this.shoppingCartService.removeOrderItem(id, user.getShoppingCart().getId());

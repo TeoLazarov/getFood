@@ -65,6 +65,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("isAnonymous()")
     public ModelAndView registerConfirm(@Valid @ModelAttribute(name = "model") UserRegisterBindingModel model, BindingResult bindingResult, ModelAndView modelAndView) {
         this.userRegisterValidator.validate(model, bindingResult);
         if (bindingResult.hasErrors()) {
