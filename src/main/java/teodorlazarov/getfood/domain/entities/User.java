@@ -12,8 +12,6 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
 
-    //TODO constraints and validations
-
     private String username;
     private String fullName;
     private String password;

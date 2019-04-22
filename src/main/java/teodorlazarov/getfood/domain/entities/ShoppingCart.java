@@ -9,8 +9,6 @@ import java.util.List;
 @Table(name = "shopping_carts")
 public class ShoppingCart extends BaseEntity {
 
-    //TODO constraints and validations
-
     private List<OrderItem> orderItems;
     private LocalDate expiresOn;
 

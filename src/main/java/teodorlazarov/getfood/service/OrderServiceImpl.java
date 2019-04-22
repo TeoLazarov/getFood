@@ -75,7 +75,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        //todo check if empty also
         if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
             throw new ServiceGeneralException(ADDRESS_NOT_VALID_EXCEPTION);
         }
@@ -110,7 +109,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderServiceModel findOrderById(String id) {
-        //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
         Order order = this.orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(order, OrderServiceModel.class);

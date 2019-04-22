@@ -106,7 +106,6 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
-    //move the business logic out of here
     @SuppressWarnings("Duplicates")
     @GetMapping("/admin/products/edit/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

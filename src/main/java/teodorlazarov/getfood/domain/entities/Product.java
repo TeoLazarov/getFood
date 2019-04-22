@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
-    //TODO constraints and validations
-
     private String name;
     private String description;
     private ProductType productType;

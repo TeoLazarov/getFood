@@ -90,7 +90,6 @@ public class UserController {
         return modelAndView;
     }
 
-    //todo move this to UserApiController and move the business logic out of the controller
     @GetMapping(value = "/fetch/users", produces = "application/json")
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")

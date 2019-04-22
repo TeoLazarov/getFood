@@ -6,8 +6,6 @@ import javax.persistence.*;
 @Table(name = "order_items")
 public class OrderItem extends BaseEntity{
 
-    //TODO constraints and validations
-
     private Product product;
     private int quantity;
 
