@@ -13,7 +13,7 @@
         <h1 class="text-center" th:text="${product.name}"></h1>
         <img class="mx-auto d-block img-thumbnail img-fluid" width="300px" height="200px" th:src="${product.image}" alt="">
         <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/products/edit/{id}(id=${product.id})}" enctype="multipart/form-data" th:object="${model}">
+        <form class="mx-auto w-25" th:method="post" th:action="@{/admin/products/edit/{id}(id=${product.id})}" enctype="multipart/form-data" th:object="${model}">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" placeholder="Product name..." name="name" th:field="*{name}" th:required="required">
@@ -56,7 +56,7 @@
             <hr class="hr-2"/>
             <div class="button-holder m-4 d-flex justify-content-center">
                 <button type="submit" class="btn btn-warning text-white">Save product</button>
-                <a th:href="@{/products/all}" class="btn btn-danger ml-2">Cancel</a>
+                <a th:href="@{/admin/products/all}" class="btn btn-danger ml-2">Cancel</a>
             </div>
         </form>
     </div>

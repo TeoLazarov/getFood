@@ -1,7 +1,5 @@
 package teodorlazarov.getfood.domain.models.view;
 
-import teodorlazarov.getfood.domain.entities.UserRole;
-
 import java.time.LocalDate;
 import java.util.Set;
 

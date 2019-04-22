@@ -1,18 +1,13 @@
 package teodorlazarov.getfood.domain.entities;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "shopping_carts")
 public class ShoppingCart extends BaseEntity {
-
-    //TODO constraints and validations
 
     private List<OrderItem> orderItems;
     private LocalDate expiresOn;

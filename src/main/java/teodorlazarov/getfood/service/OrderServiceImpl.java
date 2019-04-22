@@ -12,7 +12,6 @@ import teodorlazarov.getfood.repository.OrderRepository;
 import teodorlazarov.getfood.web.errors.exceptions.NotFoundException;
 import teodorlazarov.getfood.web.errors.exceptions.ServiceGeneralException;
 
-import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderServiceModel createOrder(String username, String addressId) throws MessagingException {
+    public OrderServiceModel createOrder(String username, String addressId) {
         UserServiceModel user = this.userService.findUserByUsername(username);
         String shoppingCartId = user.getShoppingCart().getId();
         ShoppingCartServiceModel shoppingCartServiceModel = this.shoppingCartService.findShoppingCartById(shoppingCartId);
@@ -76,7 +75,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        //todo check if empty also
         if (orderServiceModel.getAddressCity() == null || orderServiceModel.getAddressAddress() == null ) {
             throw new ServiceGeneralException(ADDRESS_NOT_VALID_EXCEPTION);
         }
@@ -111,7 +109,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderServiceModel findOrderById(String id) {
-        //TODO check if user is the owner of the order or parameter boolean isAdmin to bypass the check
         Order order = this.orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND_EXCEPTION));
 
         return this.modelMapper.map(order, OrderServiceModel.class);
@@ -149,7 +146,10 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderServiceModel> findAllNotFinishedOrderByUsername(String username) {
         List<Order> orders = this.orderRepository.findAllByUser_UsernameAndFinishedIsFalse(username);
 
-        return orders.stream().map(o -> this.modelMapper.map(o, OrderServiceModel.class)).collect(Collectors.toList());
+        return orders
+                .stream()
+                .map(o -> this.modelMapper.map(o, OrderServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     private boolean userHasUnfinishedOrder(String username){

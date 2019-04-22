@@ -11,8 +11,6 @@ import javax.persistence.Transient;
 @Table(name = "user_roles")
 public class UserRole extends BaseEntity implements GrantedAuthority {
 
-    //TODO constraints and validations
-
     private String role;
 
     public UserRole() {

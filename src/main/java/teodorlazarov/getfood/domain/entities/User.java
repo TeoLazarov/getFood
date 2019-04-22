@@ -3,7 +3,6 @@ package teodorlazarov.getfood.domain.entities;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
-
-    //TODO constraints and validations
 
     private String username;
     private String fullName;

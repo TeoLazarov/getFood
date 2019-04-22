@@ -2,6 +2,7 @@ package teodorlazarov.getfood.web.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class AddressController {
 
     private final AddressService addressService;

@@ -46,22 +46,24 @@ public class ProductController {
         this.productEditValidator = productEditValidator;
     }
 
-    @SuppressWarnings("Duplicates")
-    @GetMapping("/products/create")
+    @GetMapping("/admin/products/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PageTitle(value = "Create Product")
     public ModelAndView create(@ModelAttribute(name = "model") ProductCreateBindingModel model, @ModelAttribute ProductTypeServiceModel types, ModelAndView modelAndView) {
-        modelAndView.addObject("types", this.productTypeService.findAllTypes()
+        List<ProductTypeViewModel> productTypeViewModels = this.productTypeService.findAllTypes()
                 .stream()
-                .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList()));
+                .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("types", productTypeViewModels);
+
         modelAndView.addObject("model", model);
         modelAndView.setViewName("product-create");
 
         return modelAndView;
     }
 
-    @SuppressWarnings("Duplicates")
-    @PostMapping("products/create")
+    @PostMapping("/admin/products/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView createConfirm(@Valid @ModelAttribute(name = "model") ProductCreateBindingModel model, BindingResult bindingResult, ModelAndView modelAndView) throws IOException {
         this.productCreateValidator.validate(model, bindingResult);
@@ -69,7 +71,9 @@ public class ProductController {
         if (bindingResult.hasErrors()){
             modelAndView.addObject("types", this.productTypeService.findAllTypes()
                     .stream()
-                    .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList()));
+                    .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class))
+                    .collect(Collectors.toList()));
+
             modelAndView.addObject("model", model);
             modelAndView.setViewName("product-create");
             return modelAndView;
@@ -78,12 +82,12 @@ public class ProductController {
         ProductServiceModel product = this.modelMapper.map(model, ProductServiceModel.class);
         this.productService.createProduct(product, model.getProductType(), model.getImage());
 
-        modelAndView.setViewName("redirect:/products/all");
+        modelAndView.setViewName("redirect:/admin/products/all");
 
         return modelAndView;
     }
 
-    @GetMapping("/products/all")
+    @GetMapping("/admin/products/all")
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PageTitle(value = "All Products")
     public ModelAndView all(ModelAndView modelAndView) {
@@ -102,18 +106,18 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
-    //move the business logic out of here
     @SuppressWarnings("Duplicates")
-    @GetMapping("/products/edit/{id}")
+    @GetMapping("/admin/products/edit/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PageTitle(value = "Edit Product")
     public ModelAndView edit(@PathVariable String id, ModelAndView modelAndView, @ModelAttribute(name = "model") ProductEditBindingModel model) {
         ProductServiceModel productServiceModel = this.productService.findProductById(id);
         ProductViewModel productViewModel = this.modelMapper.map(productServiceModel, ProductViewModel.class);
-        List<ProductTypeViewModel> types = this.productTypeService.findAllTypes()
+        List<ProductTypeViewModel> types = this.productTypeService
+                .findAllTypesExceptTheGivenParameter(productServiceModel.getProductType().getName())
                 .stream()
-                .filter(p -> !p.getName().equals(productServiceModel.getProductType().getName()))
-                .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList());
+                .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class))
+                .collect(Collectors.toList());
 
         modelAndView.addObject("product", productViewModel);
         modelAndView.addObject("types", types);
@@ -125,21 +129,24 @@ public class ProductController {
     }
 
     @SuppressWarnings("Duplicates")
-    @PostMapping("/products/edit/{id}")
+    @PostMapping("/admin/products/edit/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView editConfirm(@PathVariable String id, @Valid @ModelAttribute(name = "model") ProductEditBindingModel model, BindingResult bindingResult, ModelAndView modelAndView) throws IOException {
         this.productEditValidator.validate(model, bindingResult);
         if (bindingResult.hasErrors()){
             ProductServiceModel productServiceModel = this.productService.findProductById(id);
             ProductViewModel productViewModel = this.modelMapper.map(productServiceModel, ProductViewModel.class);
-            List<ProductTypeViewModel> types = this.productTypeService.findAllTypes()
+            List<ProductTypeViewModel> types = this.productTypeService
+                    .findAllTypesExceptTheGivenParameter(productServiceModel.getProductType().getName())
                     .stream()
-                    .filter(p -> !p.getName().equals(productServiceModel.getProductType().getName()))
-                    .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class)).collect(Collectors.toList());
+                    .map(p -> this.modelMapper.map(p, ProductTypeViewModel.class))
+                    .collect(Collectors.toList());
+
             modelAndView.addObject("model", model);
             modelAndView.addObject("product", productViewModel);
             modelAndView.addObject("types", types);
             modelAndView.setViewName("product-edit");
+
             return modelAndView;
         }
 
@@ -148,7 +155,7 @@ public class ProductController {
         productServiceModel.setProductType(productType);
         this.productService.editProduct(id, productServiceModel, model.getImage());
 
-        modelAndView.setViewName("redirect:/products/all");
+        modelAndView.setViewName("redirect:/admin/products/all");
 
         return modelAndView;
     }

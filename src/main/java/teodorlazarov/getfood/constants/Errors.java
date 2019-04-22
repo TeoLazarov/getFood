@@ -11,9 +11,9 @@ public final class Errors {
     public static final String PRODUCT_QUANTITY_LESS_THAN_MINIMUM_EXCEPTION = "Product quantity cannot be less than 1!";
 
     public static final String USERNAME_NOT_FOUND_EXCEPTION = "Username not found!";
-    public static final String USER_HAS_ACTIVE_ORDER_EXCEPTION = "User has an active order already.";
+    public static final String USER_HAS_ACTIVE_ORDER_EXCEPTION = "You have an active order already!";
     public static final String USER_ROLE_NOT_FOUND_EXCEPTION = "UserRole not found!";
-    public static final String CANNOT_MODIFY_ROLE_EXCEPTION = "Role cannot be modified";
+    public static final String CANNOT_MODIFY_ROLE_EXCEPTION = "Role cannot be modified!";
 
     public static final String ADDRESS_NOT_FOUND_EXCEPTION = "Address not found!";
     public static final String ADDRESS_NOT_FOUND_IN_ADDRESSES_EXCEPTION = "Address not found in your addresses!";

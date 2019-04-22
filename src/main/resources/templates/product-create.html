@@ -12,7 +12,7 @@
     <div class="container">
         <h1 class="text-center">Create a Product</h1>
         <hr class="w-25 hr-2"/>
-        <form class="mx-auto w-25" th:method="post" th:action="@{/products/create}" enctype="multipart/form-data" th:object="${model}">
+        <form class="mx-auto w-25" th:method="post" th:action="@{/admin/products/create}" enctype="multipart/form-data" th:object="${model}">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" placeholder="Product name..." name="name" th:required="required" th:field="*{name}">

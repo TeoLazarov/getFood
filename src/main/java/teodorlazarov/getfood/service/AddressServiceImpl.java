@@ -29,11 +29,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressServiceModel createAddress(AddressServiceModel addressServiceModel, String username) {
+        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new NotFoundException(USERNAME_NOT_FOUND_EXCEPTION));
         Address address = this.modelMapper.map(addressServiceModel, Address.class);
-
         address = this.addressRepository.saveAndFlush(address);
 
-        User user = this.userRepository.findUserByUsername(username).orElseThrow(() -> new NotFoundException(USERNAME_NOT_FOUND_EXCEPTION));
         user.getAddresses().add(address);
         this.userRepository.saveAndFlush(user);
 
