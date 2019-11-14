@@ -2,6 +2,8 @@
 
 A simple Spring MVC project made by Teodor Lazarov for the [Java MVC Frameworks - Spring - february 2019](https://softuni.bg/trainings/2295/java-mvc-frameworks-spring-february-2019) course at [SoftUni](https://softuni.bg/). getFood is an online restaurant for ordering food and beverages to be delivered at your door.
 
+[Project Screenshots](https://imgur.com/a/rhgn1SX)
+
 ## Built With
 
 * [Spring](https://spring.io/)
